@@ -1,0 +1,130 @@
+﻿@using TotalPortal.Configuration
+
+<div id="popupWindow"></div>
+
+<div>
+    @(Html.Kendo().Grid<TotalModel.Models.PlannedOrderIndex>()
+            .Name("kendoGridIndex")
+            .Columns(columns =>
+            {
+                columns.Bound(p => p.PlannedOrderID).DisplayNameTitle().Hidden();
+                columns.Bound(p => p.EntryDate).Title("Ngày").Format("{0:dd/MM/yyyy}").Hidden();
+                columns.Bound(p => p.Reference).Title("KHSX").Width(10).ClientTemplate("<a href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Edit" }) + "/#= PlannedOrderID #'>#=Reference#</a>");
+                
+                columns.Bound(p => p.DeliveryDate).Title("G/H").Format("{0:dd/MM/yyyy}").Width(10);
+                columns.Bound(p => p.CustomerName).Title("Tên KH").Width(68);
+                columns.Bound(p => p.Code).Title("Số CT").Width(10);
+                columns.Bound(p => p.Caption).Title("Mặt hàng").Width(108);
+                columns.Bound(p => p.Description).Title("Diễn giải").Width(96);
+                columns.Bound(p => p.VoidTypeName).Title("Hủy đh").Width(30);
+
+                columns.Bound(p => p.TotalQuantity).Title("SL").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
+                
+                columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(62)
+                    .ClientTemplate("<a class='k-button' title='Duyệt/Hủy duyệt' style='padding-left:5px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Void" }) + "/#= PlannedOrderID #'><span class='k-icon k-edit'></span></a> <a class='k-button' title='Xóa chứng từ' style='padding-left:0px; padding-right:0px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Delete" }) + "/#= PlannedOrderID #'><span class='k-icon k-delete'></span></a>");
+            })
+            .ToolBar(toolbar =>
+            {
+                toolbar.Template(@<text>                    
+                    <button type="button" class="k-button" onclick="createWizard()"> <img src="~/Content/Images/Mains/Size24/folder-documents-icon-24.png" />  Lập phiếu kế hoạch sản xuất  </button>
+                    <div class="toolbar" style="float: right;">
+                        <label>Nhập số phiếu, số chừng từ, hoặc tên khách hàng, diễn giải để tìm</label>
+                        <input id="indexFilterText" class="k-textbox" style="text-align: center; " onkeyup="indexFilterText_KeyUp()" />
+                    </div>
+                </text>);
+            })
+            .Filterable(f => f.Enabled(false))            
+            .Pageable()
+            .Groupable(g => g.Messages(messages => messages.Empty("Phân nhóm dữ liệu: Kéo và thả tiêu đề một hoặc nhiều cột dữ liệu ngay bên dưới vào đây để phân nhóm hiển thị theo phân cấp của các cột dữ liệu")))                        
+            .Selectable()
+            .Sortable()
+            .Events(e =>
+            {
+                e.DataBound("hightLightSelectedRow");
+            })
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Group(group => group.AddDescending(p => p.EntryDate))
+                .Read(read => read.Action("GetPlannedOrderIndexes", "PlannedOrderAPIs", new { area = "Productions" }))
+                .Sort(sort =>
+                    {
+                        sort.Add(p => p.EntryDate).Descending();
+                        sort.Add(p => p.PlannedOrderID).Descending();
+                    })
+                .PageSize(20)
+                .Model(model =>
+                {
+                    model.Id(x => x.PlannedOrderID);
+                    model.Field(m => m.PlannedOrderID).DefaultValue(0);
+                })
+                .ServerOperation(true)
+                .Aggregates(a => a.Add(x => x.TotalQuantity).Sum())
+                )
+            .HtmlAttributes(new { @class = "grid-class" }))
+</div>
+
+
+
+<script type="text/javascript">
+    function hightLightSelectedRow(e) {
+        require(["kindexGrid"], function (kindexGrid) {
+            var kindexGridInstance = new kindexGrid("kendoGridIndex");
+            kindexGridInstance.setSelectedRow("PlannedOrderID", '@ViewBag.SelectedEntityID');
+        });
+    }
+
+    function createWizard() {
+        require(["kpopupWindow"], function (kpopupWindow) {
+            var createWizardWindow = new kpopupWindow();
+            createWizardWindow.openWindow($("#popupWindow"), "@Url.Action("CreateWizard", "PlannedOrders")", "Chọn khách hàng", "@Settings.PopupWidth", "@Settings.PopupHeightSmall");
+        });
+    }
+
+
+    decoratingKindex = function (idx, elem) {
+
+        if (elem.Approved == null || elem.Approved == false) {
+            $('tr[data-uid="' + elem.uid + '"]').addClass("NotApproved");
+        }
+        else
+        {
+            if (elem.InActive != null && elem.InActive == true) {
+                $('tr[data-uid="' + elem.uid + '"]').addClass("isBonus");
+            }
+
+            if (elem.InActivePartial != null && elem.InActivePartial == true) {
+                $('tr[data-uid="' + elem.uid + '"]').addClass("isBonus1");
+            }
+        }
+
+    }
+
+
+
+
+
+
+    function indexFilterText_KeyUp() {
+        var indexFilterText = $("#indexFilterText").val(), gridDetails = $("#kendoGridIndex").data("kendoGrid");
+
+        if (indexFilterText && indexFilterText.length >= "@Settings.AutoCompleteMinLenght") {
+            gridDetails.dataSource.filter({
+                logic: "or",
+                filters: [
+                    { field: "Code", operator: "contains", value: indexFilterText },
+                    { field: "Reference", operator: "contains", value: indexFilterText },
+                    { field: "CustomerName", operator: "contains", value: indexFilterText },
+                    { field: "Description", operator: "contains", value: indexFilterText }
+                ]
+            });                                    
+
+        } else {
+            if (gridDetails.dataSource.filter() != undefined)
+                gridDetails.dataSource.filter({});
+        }
+    }
+
+</script>
+
+
+
