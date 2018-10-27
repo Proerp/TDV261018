@@ -685,6 +685,11 @@
           <Property Name="QuantityOnhand" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="QuantitySemifinished" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="QuantityFinished" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="QuantityFailure" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="QuantityExcess" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="QuantityShortage" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Swarfs" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Specs" Type="nvarchar" MaxLength="800" />
           <Property Name="Description" Type="nvarchar" MaxLength="800" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="800" />
@@ -14817,6 +14822,11 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Property Name="QuantityRequested" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="QuantityOnhand" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="Specs" Type="String" MaxLength="800" FixedLength="false" Unicode="true" />
+          <Property Name="QuantityFinished" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="QuantityFailure" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="QuantityExcess" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="QuantityShortage" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Swarfs" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="FirmOrder">
           <Key>
@@ -21291,6 +21301,11 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <EntitySetMapping Name="FirmOrderDetails">
             <EntityTypeMapping TypeName="TotalSmartPortalModel.FirmOrderDetail">
               <MappingFragment StoreEntitySet="FirmOrderDetails">
+                <ScalarProperty Name="Swarfs" ColumnName="Swarfs" />
+                <ScalarProperty Name="QuantityShortage" ColumnName="QuantityShortage" />
+                <ScalarProperty Name="QuantityExcess" ColumnName="QuantityExcess" />
+                <ScalarProperty Name="QuantityFailure" ColumnName="QuantityFailure" />
+                <ScalarProperty Name="QuantityFinished" ColumnName="QuantityFinished" />
                 <ScalarProperty Name="Specs" ColumnName="Specs" />
                 <ScalarProperty Name="QuantityOnhand" ColumnName="QuantityOnhand" />
                 <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />

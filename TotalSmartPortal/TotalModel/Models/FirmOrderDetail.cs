@@ -48,6 +48,11 @@ namespace TotalModel.Models
         public decimal QuantityRequested { get; set; }
         public decimal QuantityOnhand { get; set; }
         public string Specs { get; set; }
+        public decimal QuantityFinished { get; set; }
+        public decimal QuantityFailure { get; set; }
+        public decimal QuantityExcess { get; set; }
+        public decimal QuantityShortage { get; set; }
+        public decimal Swarfs { get; set; }
     
         public virtual Commodity Commodity { get; set; }
         public virtual Customer Customer { get; set; }
