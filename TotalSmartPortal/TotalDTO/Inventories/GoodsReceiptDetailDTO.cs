@@ -133,7 +133,7 @@ namespace TotalDTO.Inventories
         {
             foreach (var result in base.Validate(validationContext)) { yield return result; }
 
-            if (this.PurchaseRequisitionID > 0 && this.Quantity > this.QuantityRemains) yield return new ValidationResult("Số lượng xuất không được lớn hơn số lượng còn lại [" + this.CommodityName + "]", new[] { "Quantity" });
+            if (this.MaterialIssueDetailID == 0 && this.Quantity > this.QuantityRemains) yield return new ValidationResult("Số lượng nhập kho không được lớn hơn số lượng còn lại [" + this.CommodityName + "]", new[] { "Quantity" });
         }
     }
 }

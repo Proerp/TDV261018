@@ -155,7 +155,17 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "       FROM            FinishedProductDetails " + "\r\n";
             queryString = queryString + "                       INNER JOIN SemifinishedProductDetails ON SemifinishedProductDetails.Approved = 1 AND SemifinishedProductDetails.HandoverApproved = 1 AND FinishedProductDetails.FinishedProductID = @EntityID AND FinishedProductDetails.SemifinishedProductDetailID = SemifinishedProductDetails.SemifinishedProductDetailID " + "\r\n";
 
-            queryString = queryString + "       IF @@ROWCOUNT <> (SELECT COUNT(*) FROM FinishedProductDetails WHERE FinishedProductID = @EntityID) " + "\r\n";
+            queryString = queryString + "       IF @@ROWCOUNT = (SELECT COUNT(*) FROM FinishedProductDetails WHERE FinishedProductID = @EntityID) " + "\r\n";
+            queryString = queryString + "           BEGIN " + "\r\n";
+            queryString = queryString + "               UPDATE  FirmOrderDetails " + "\r\n";
+            queryString = queryString + "               SET     FirmOrderDetails.QuantityFinished = ROUND(FirmOrderDetails.QuantityFinished + FinishedProductSummaries.Quantity * @SaveRelativeOption, " + (int)GlobalEnums.rndQuantity + "), " + "\r\n";
+            queryString = queryString + "                       FirmOrderDetails.QuantityFailure = ROUND(FirmOrderDetails.QuantityFailure + FinishedProductSummaries.QuantityFailure * @SaveRelativeOption, " + (int)GlobalEnums.rndQuantity + "), " + "\r\n";
+            queryString = queryString + "                       FirmOrderDetails.QuantityExcess = ROUND(FirmOrderDetails.QuantityExcess + FinishedProductSummaries.QuantityExcess * @SaveRelativeOption, " + (int)GlobalEnums.rndQuantity + "), " + "\r\n";
+            queryString = queryString + "                       FirmOrderDetails.QuantityShortage = ROUND(FirmOrderDetails.QuantityShortage + FinishedProductSummaries.QuantityShortage * @SaveRelativeOption, " + (int)GlobalEnums.rndQuantity + "), " + "\r\n";
+            queryString = queryString + "                       FirmOrderDetails.Swarfs = ROUND(FirmOrderDetails.Swarfs + FinishedProductSummaries.Swarfs * @SaveRelativeOption, " + (int)GlobalEnums.rndQuantity + ") " + "\r\n";
+            queryString = queryString + "               FROM    FirmOrderDetails INNER JOIN (SELECT FirmOrderDetailID, SUM(Quantity) AS Quantity, SUM(QuantityFailure) AS QuantityFailure, SUM(QuantityExcess) AS QuantityExcess, SUM(QuantityShortage) AS QuantityShortage, SUM(Swarfs) AS Swarfs FROM FinishedProductDetails WHERE FinishedProductID = @EntityID GROUP BY FirmOrderDetailID) AS FinishedProductSummaries ON FirmOrderDetails.FirmOrderDetailID = FinishedProductSummaries.FirmOrderDetailID ; " + "\r\n";
+            queryString = queryString + "           END " + "\r\n";
+            queryString = queryString + "       ELSE " + "\r\n";
             queryString = queryString + "           BEGIN " + "\r\n";
             queryString = queryString + "               SET         @msg = N'Phiếu BTP không tồn tại, chưa duyệt hoặc đã hủy' ; " + "\r\n";
             queryString = queryString + "               THROW       61001,  @msg, 1; " + "\r\n";

@@ -88,6 +88,7 @@ namespace TotalService.Inventories
                             CommodityCode = pendingWarehouseAdjustmentDetail.CommodityCode,
                             CommodityName = pendingWarehouseAdjustmentDetail.CommodityName,
 
+                            QuantityRemains = (decimal)pendingWarehouseAdjustmentDetail.QuantityRemains,
                             Quantity = (decimal)pendingWarehouseAdjustmentDetail.QuantityRemains,
                         };
                         goodsReceiptDTO.ViewDetails.Add(goodsReceiptDetailDTO);

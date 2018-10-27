@@ -8,6 +8,7 @@ using TotalModel.Models;
 using TotalDTO.Inventories;
 using TotalCore.Repositories.Inventories;
 using TotalCore.Services.Inventories;
+using TotalBase.Enums;
 
 namespace TotalService.Inventories
 {
@@ -23,7 +24,7 @@ namespace TotalService.Inventories
 
         public override bool Save(TDto dto)
         {
-            dto.GoodsReceiptViewDetails.RemoveAll(x => x.Quantity == 0);
+            dto.GoodsReceiptViewDetails.RemoveAll(x => x.Quantity == 0 && dto.GoodsReceiptTypeID != (int)GlobalEnums.GoodsReceiptTypeID.MaterialIssue);
             return base.Save(dto);
         }
 
