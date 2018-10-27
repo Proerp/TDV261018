@@ -82,7 +82,6 @@ namespace TotalModel.Models
         public virtual DbSet<CommodityType> CommodityTypes { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Shift> Shifts { get; set; }
-        public virtual DbSet<FirmOrderDetail> FirmOrderDetails { get; set; }
         public virtual DbSet<FirmOrder> FirmOrders { get; set; }
         public virtual DbSet<PlannedOrderDetail> PlannedOrderDetails { get; set; }
         public virtual DbSet<BomDetail> BomDetails { get; set; }
@@ -112,6 +111,7 @@ namespace TotalModel.Models
         public virtual DbSet<ProductionOrder> ProductionOrders { get; set; }
         public virtual DbSet<TransferOrder> TransferOrders { get; set; }
         public virtual DbSet<WarehouseTransfer> WarehouseTransfers { get; set; }
+        public virtual DbSet<FirmOrderDetail> FirmOrderDetails { get; set; }
     
         public virtual ObjectResult<string> AccountInvoicePostSaveValidate(Nullable<int> entityID)
         {

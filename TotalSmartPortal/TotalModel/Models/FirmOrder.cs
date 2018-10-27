@@ -17,7 +17,6 @@ namespace TotalModel.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public FirmOrder()
         {
-            this.FirmOrderDetails = new HashSet<FirmOrderDetail>();
             this.FirmOrderMaterials = new HashSet<FirmOrderMaterial>();
             this.ProductionOrderDetails = new HashSet<ProductionOrderDetail>();
             this.MaterialIssueDetails = new HashSet<MaterialIssueDetail>();
@@ -25,6 +24,7 @@ namespace TotalModel.Models
             this.SemifinishedProductDetails = new HashSet<SemifinishedProductDetail>();
             this.SemifinishedProducts = new HashSet<SemifinishedProduct>();
             this.FinishedProducts = new HashSet<FinishedProduct>();
+            this.FirmOrderDetails = new HashSet<FirmOrderDetail>();
         }
     
         public int FirmOrderID { get; set; }
@@ -60,8 +60,6 @@ namespace TotalModel.Models
         public string Specs { get; set; }
     
         public virtual Customer Customer { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FirmOrderDetail> FirmOrderDetails { get; set; }
         public virtual Location Location { get; set; }
         public virtual VoidType VoidType { get; set; }
         public virtual Bom Bom { get; set; }
@@ -79,5 +77,7 @@ namespace TotalModel.Models
         public virtual ICollection<SemifinishedProduct> SemifinishedProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinishedProduct> FinishedProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FirmOrderDetail> FirmOrderDetails { get; set; }
     }
 }

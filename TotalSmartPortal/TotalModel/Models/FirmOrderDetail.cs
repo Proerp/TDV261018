@@ -29,11 +29,23 @@ namespace TotalModel.Models
         public int CustomerID { get; set; }
         public int CommodityID { get; set; }
         public int CommodityTypeID { get; set; }
+        public int PiecePerPack { get; set; }
         public int BomID { get; set; }
+        public decimal BlockUnit { get; set; }
+        public decimal BlockQuantity { get; set; }
         public int MoldID { get; set; }
+        public decimal MoldQuantity { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public decimal QuantityRequested { get; set; }
+        public decimal QuantityOnhand { get; set; }
         public decimal Quantity { get; set; }
         public decimal QuantitySemifinished { get; set; }
+        public decimal QuantityFinished { get; set; }
+        public decimal QuantityFailure { get; set; }
+        public decimal QuantityExcess { get; set; }
+        public decimal QuantityShortage { get; set; }
+        public decimal Swarfs { get; set; }
+        public string Specs { get; set; }
         public string Description { get; set; }
         public string Remarks { get; set; }
         public Nullable<int> VoidTypeID { get; set; }
@@ -41,25 +53,13 @@ namespace TotalModel.Models
         public bool InActive { get; set; }
         public bool InActivePartial { get; set; }
         public Nullable<System.DateTime> InActivePartialDate { get; set; }
-        public decimal BlockUnit { get; set; }
-        public decimal BlockQuantity { get; set; }
-        public decimal MoldQuantity { get; set; }
-        public int PiecePerPack { get; set; }
-        public decimal QuantityRequested { get; set; }
-        public decimal QuantityOnhand { get; set; }
-        public string Specs { get; set; }
-        public decimal QuantityFinished { get; set; }
-        public decimal QuantityFailure { get; set; }
-        public decimal QuantityExcess { get; set; }
-        public decimal QuantityShortage { get; set; }
-        public decimal Swarfs { get; set; }
     
+        public virtual Bom Bom { get; set; }
         public virtual Commodity Commodity { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual FirmOrder FirmOrder { get; set; }
-        public virtual VoidType VoidType { get; set; }
-        public virtual Bom Bom { get; set; }
         public virtual Mold Mold { get; set; }
+        public virtual VoidType VoidType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SemifinishedProductDetail> SemifinishedProductDetails { get; set; }
     }
