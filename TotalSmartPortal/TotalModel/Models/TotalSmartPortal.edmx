@@ -5954,6 +5954,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Parameter Name="AspUserID" Type="nvarchar" Mode="In" />
           <Parameter Name="FromDate" Type="datetime" Mode="In" />
           <Parameter Name="ToDate" Type="datetime" Mode="In" />
+          <Parameter Name="FilterOptionID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetPlannedOrderLogs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlannedOrderID" Type="int" Mode="In" />
@@ -11313,6 +11314,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
             <Parameter Name="AspUserID" Mode="In" Type="String" />
             <Parameter Name="FromDate" Mode="In" Type="DateTime" />
             <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+            <Parameter Name="FilterOptionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetPlannedOrderViewDetails" ReturnType="Collection(TotalSmartPortalModel.PlannedOrderViewDetail)">
           <Parameter Name="PlannedOrderID" Mode="In" Type="Int32" />
@@ -13807,20 +13809,43 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
         </ComplexType>
         <ComplexType Name="PlannedOrderIndex">
           <Property Type="Int32" Name="PlannedOrderID" Nullable="false" />
-          <Property Type="DateTime" Name="EntryDate" Nullable="true" />
-          <Property Type="String" Name="Reference" Nullable="true" MaxLength="10" />
+          <Property Type="DateTime" Name="EntryDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Reference" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="Code" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="LocationCode" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="VoidTypeName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="VoidTypeName" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
           <Property Type="Boolean" Name="Approved" Nullable="false" />
           <Property Type="Boolean" Name="InActive" Nullable="false" />
           <Property Type="Boolean" Name="InActivePartial" Nullable="false" />
-          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CustomerName" Nullable="false" MaxLength="100" />
           <Property Type="DateTime" Name="DeliveryDate" Nullable="true" Precision="23" />
-          <Property Type="Decimal" Name="TotalQuantity" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="String" Name="Caption" Nullable="true" MaxLength="100" />
-        </ComplexType>
+          <Property Type="DateTime" Name="PlannedOrderEntryDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="VoucherDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CustomerCode" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="FirmOrderID" Nullable="true" />
+          <Property Type="Int32" Name="FirmOrderDetailID" Nullable="true" />
+          <Property Type="Int32" Name="SerialID" Nullable="true" />
+          <Property Type="String" Name="CommodityCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CommodityName" Nullable="true" MaxLength="200" />
+          <Property Type="Decimal" Name="QuantityRequested" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantityOnhand" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantityProduced" Nullable="true" Precision="21" Scale="2" />
+          <Property Type="String" Name="ItemCode" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="ItemQuantity" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemQuantitySemifinished" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemQuantityFailure" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemQuantityReceipted" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemQuantityLoss" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantitySemifinished" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantitySemifinishedRemains" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Decimal" Name="QuantityFinished" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantityExcess" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantityShortage" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantityFailure" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="QuantityAndExcess" Nullable="true" Precision="21" Scale="2" />
+          <Property Type="Decimal" Name="Swarfs" Nullable="true" Precision="18" Scale="2" />
+          </ComplexType>
         <ComplexType Name="PlannedOrderViewDetail">
           <Property Type="Int32" Name="PlannedOrderDetailID" Nullable="false" />
           <Property Type="Int32" Name="PlannedOrderID" Nullable="false" />
@@ -20745,7 +20770,6 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
                 <ScalarProperty Name="Reference" ColumnName="Reference" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="LocationCode" ColumnName="LocationCode" />
                 <ScalarProperty Name="VoidTypeName" ColumnName="VoidTypeName" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Approved" ColumnName="Approved" />
@@ -20753,9 +20777,33 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="InActivePartial" ColumnName="InActivePartial" />
                 <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
                 <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
-                <ScalarProperty Name="Caption" ColumnName="Caption" />
-              </ComplexTypeMapping>
+                <ScalarProperty Name="PlannedOrderEntryDate" ColumnName="PlannedOrderEntryDate" />
+                <ScalarProperty Name="VoucherDate" ColumnName="VoucherDate" />
+                <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
+                <ScalarProperty Name="FirmOrderID" ColumnName="FirmOrderID" />
+                <ScalarProperty Name="FirmOrderDetailID" ColumnName="FirmOrderDetailID" />
+                <ScalarProperty Name="SerialID" ColumnName="SerialID" />
+                <ScalarProperty Name="CommodityCode" ColumnName="CommodityCode" />
+                <ScalarProperty Name="CommodityName" ColumnName="CommodityName" />
+                <ScalarProperty Name="QuantityRequested" ColumnName="QuantityRequested" />
+                <ScalarProperty Name="QuantityOnhand" ColumnName="QuantityOnhand" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="QuantityProduced" ColumnName="QuantityProduced" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="ItemQuantity" ColumnName="ItemQuantity" />
+                <ScalarProperty Name="ItemQuantitySemifinished" ColumnName="ItemQuantitySemifinished" />
+                <ScalarProperty Name="ItemQuantityFailure" ColumnName="ItemQuantityFailure" />
+                <ScalarProperty Name="ItemQuantityReceipted" ColumnName="ItemQuantityReceipted" />
+                <ScalarProperty Name="ItemQuantityLoss" ColumnName="ItemQuantityLoss" />
+                <ScalarProperty Name="QuantitySemifinished" ColumnName="QuantitySemifinished" />
+                <ScalarProperty Name="QuantitySemifinishedRemains" ColumnName="QuantitySemifinishedRemains" />
+                <ScalarProperty Name="QuantityFinished" ColumnName="QuantityFinished" />
+                <ScalarProperty Name="QuantityExcess" ColumnName="QuantityExcess" />
+                <ScalarProperty Name="QuantityShortage" ColumnName="QuantityShortage" />
+                <ScalarProperty Name="QuantityFailure" ColumnName="QuantityFailure" />
+                <ScalarProperty Name="QuantityAndExcess" ColumnName="QuantityAndExcess" />
+                <ScalarProperty Name="Swarfs" ColumnName="Swarfs" />
+                </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetPlannedOrderViewDetails" FunctionName="TotalSmartPortalModel.Store.GetPlannedOrderViewDetails">

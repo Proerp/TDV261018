@@ -13,6 +13,7 @@ namespace TotalPortal.Configuration
 
         public static int MinLenght2 = 2;
         public static int AutoCompleteMinLenght = 2;
+        public static int AutoCompleteMinLenght03 = 3;
 
         public static string DateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
         public static string TimeFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;

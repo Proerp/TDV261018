@@ -2567,7 +2567,7 @@ namespace TotalModel.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MaterialIssueToggleApproved", entityIDParameter, approvedParameter);
         }
     
-        public virtual ObjectResult<PlannedOrderIndex> GetPlannedOrderIndexes(string aspUserID, Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate)
+        public virtual ObjectResult<PlannedOrderIndex> GetPlannedOrderIndexes(string aspUserID, Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate, Nullable<int> filterOptionID)
         {
             var aspUserIDParameter = aspUserID != null ?
                 new ObjectParameter("AspUserID", aspUserID) :
@@ -2581,7 +2581,11 @@ namespace TotalModel.Models
                 new ObjectParameter("ToDate", toDate) :
                 new ObjectParameter("ToDate", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PlannedOrderIndex>("GetPlannedOrderIndexes", aspUserIDParameter, fromDateParameter, toDateParameter);
+            var filterOptionIDParameter = filterOptionID.HasValue ?
+                new ObjectParameter("FilterOptionID", filterOptionID) :
+                new ObjectParameter("FilterOptionID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PlannedOrderIndex>("GetPlannedOrderIndexes", aspUserIDParameter, fromDateParameter, toDateParameter, filterOptionIDParameter);
         }
     
         public virtual ObjectResult<PlannedOrderViewDetail> GetPlannedOrderViewDetails(Nullable<int> plannedOrderID)

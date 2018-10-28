@@ -11,6 +11,7 @@ using TotalModel.Models;
 using TotalCore.Repositories.Productions;
 
 using TotalPortal.APIs.Sessions;
+using System;
 
 namespace TotalPortal.Areas.Productions.APIs
 {
@@ -25,14 +26,17 @@ namespace TotalPortal.Areas.Productions.APIs
         }
 
 
-        public JsonResult GetPlannedOrderIndexes([DataSourceRequest] DataSourceRequest request)
+        public JsonResult GetPlannedOrderIndexes([DataSourceRequest] DataSourceRequest request, bool withExtendedSearch, DateTime extendedFromDate, DateTime extendedToDate, int filterOptionID)
         {
-            ICollection<PlannedOrderIndex> plannedOrderIndexes = this.plannedOrderAPIRepository.GetEntityIndexes<PlannedOrderIndex>(User.Identity.GetUserId(), HomeSession.GetGlobalFromDate(this.HttpContext), HomeSession.GetGlobalToDate(this.HttpContext));
+            this.plannedOrderAPIRepository.RepositoryBag["FilterOptionID"] = filterOptionID;
+            ICollection<PlannedOrderIndex> plannedOrderIndexes = this.plannedOrderAPIRepository.GetEntityIndexes<PlannedOrderIndex>(User.Identity.GetUserId(), (withExtendedSearch ? extendedFromDate : HomeSession.GetGlobalFromDate(this.HttpContext)), (withExtendedSearch ? extendedToDate : HomeSession.GetGlobalToDate(this.HttpContext)));
 
             DataSourceResult response = plannedOrderIndexes.ToDataSourceResult(request);
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+
 
         public JsonResult GetPlannedOrderLogs([DataSourceRequest] DataSourceRequest dataSourceRequest, int? plannedOrderID, int? firmOrderID)
         {

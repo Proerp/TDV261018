@@ -1826,6 +1826,7 @@
     <Content Include="Scripts\Controllers\Root\Home\Options.js" />
     <Content Include="Scripts\Controllers\Root\Home\Searches.js" />
     <Content Include="Scripts\Controllers\Root\Account\UserReferences.js" />
+    <Content Include="Scripts\Controllers\Root\Home\SmartBiztech.js" />
     <Content Include="Scripts\Controllers\Root\Reports\Index.js" />
     <Content Include="Scripts\Controllers\Root\Reports\Open.js" />
     <Content Include="Scripts\Controllers\Root\Shared\Commons\kendoWidgetReadonly.js" />

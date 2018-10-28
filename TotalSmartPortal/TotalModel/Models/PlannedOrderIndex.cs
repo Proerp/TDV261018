@@ -14,10 +14,9 @@ namespace TotalModel.Models
     public partial class PlannedOrderIndex
     {
         public int PlannedOrderID { get; set; }
-        public Nullable<System.DateTime> EntryDate { get; set; }
+        public System.DateTime EntryDate { get; set; }
         public string Reference { get; set; }
         public string Code { get; set; }
-        public string LocationCode { get; set; }
         public string VoidTypeName { get; set; }
         public string Description { get; set; }
         public bool Approved { get; set; }
@@ -25,7 +24,31 @@ namespace TotalModel.Models
         public bool InActivePartial { get; set; }
         public string CustomerName { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
-        public decimal TotalQuantity { get; set; }
-        public string Caption { get; set; }
+        public System.DateTime PlannedOrderEntryDate { get; set; }
+        public Nullable<System.DateTime> VoucherDate { get; set; }
+        public string CustomerCode { get; set; }
+        public Nullable<int> FirmOrderID { get; set; }
+        public Nullable<int> FirmOrderDetailID { get; set; }
+        public Nullable<int> SerialID { get; set; }
+        public string CommodityCode { get; set; }
+        public string CommodityName { get; set; }
+        public Nullable<decimal> QuantityRequested { get; set; }
+        public Nullable<decimal> QuantityOnhand { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
+        public Nullable<decimal> QuantityProduced { get; set; }
+        public string ItemCode { get; set; }
+        public Nullable<decimal> ItemQuantity { get; set; }
+        public Nullable<decimal> ItemQuantitySemifinished { get; set; }
+        public Nullable<decimal> ItemQuantityFailure { get; set; }
+        public Nullable<decimal> ItemQuantityReceipted { get; set; }
+        public Nullable<decimal> ItemQuantityLoss { get; set; }
+        public Nullable<decimal> QuantitySemifinished { get; set; }
+        public Nullable<decimal> QuantitySemifinishedRemains { get; set; }
+        public Nullable<decimal> QuantityFinished { get; set; }
+        public Nullable<decimal> QuantityExcess { get; set; }
+        public Nullable<decimal> QuantityShortage { get; set; }
+        public Nullable<decimal> QuantityFailure { get; set; }
+        public Nullable<decimal> QuantityAndExcess { get; set; }
+        public Nullable<decimal> Swarfs { get; set; }
     }
 }
