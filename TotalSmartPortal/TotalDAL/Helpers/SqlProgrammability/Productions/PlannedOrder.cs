@@ -42,21 +42,127 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
         {
             string queryString;
 
-            queryString = " @AspUserID nvarchar(128), @FromDate DateTime, @ToDate DateTime " + "\r\n";
+            queryString = " @AspUserID nvarchar(128), @FromDate DateTime, @ToDate DateTime, @FilterOptionID int " + "\r\n";
             queryString = queryString + " WITH ENCRYPTION " + "\r\n";
             queryString = queryString + " AS " + "\r\n";
             queryString = queryString + "    BEGIN " + "\r\n";
 
-            queryString = queryString + "       SELECT      PlannedOrders.PlannedOrderID, CAST(PlannedOrders.EntryDate AS DATE) AS EntryDate, PlannedOrders.Reference, PlannedOrders.Code, Customers.Name AS CustomerName, PlannedOrders.DeliveryDate, PlannedOrders.Caption, Locations.Code AS LocationCode, ISNULL(VoidTypes.Name, CASE PlannedOrders.InActivePartial WHEN 1 THEN N'Hủy một phần đh' ELSE N'' END) AS VoidTypeName, PlannedOrders.Description, PlannedOrders.TotalQuantity, PlannedOrders.Approved, PlannedOrders.InActive, PlannedOrders.InActivePartial " + "\r\n";
-            queryString = queryString + "       FROM        PlannedOrders " + "\r\n";
-            queryString = queryString + "                   INNER JOIN Locations ON PlannedOrders.EntryDate >= @FromDate AND PlannedOrders.EntryDate <= @ToDate AND PlannedOrders.OrganizationalUnitID IN (SELECT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @AspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND Locations.LocationID = PlannedOrders.LocationID " + "\r\n";
-            queryString = queryString + "                   LEFT JOIN VoidTypes ON PlannedOrders.VoidTypeID = VoidTypes.VoidTypeID" + "\r\n";
-            queryString = queryString + "                   LEFT JOIN Customers ON PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
-            queryString = queryString + "       " + "\r\n";
+            queryString = queryString + "       DECLARE     @LocalAspUserID nvarchar(128), @LocalFromDate DateTime, @LocalToDate DateTime, @LocalFilterOptionID int " + "\r\n";
+            queryString = queryString + "       SET         @LocalAspUserID = @AspUserID       SET @LocalFromDate = @FromDate      SET @LocalToDate = @ToDate          SET @LocalFilterOptionID = @FilterOptionID    " + "\r\n";
+
+            queryString = queryString + "       DECLARE     @PlannedOrderIndexes TABLE (PlannedOrderID int NOT NULL, EntryDate datetime NOT NULL, PlannedOrderEntryDate datetime NOT NULL, Reference nvarchar(10) NOT NULL, Code nvarchar(50) NULL, VoucherDate datetime NULL, DeliveryDate datetime NULL, CustomerCode nvarchar(50) NOT NULL, CustomerName nvarchar(100) NOT NULL, Description nvarchar(100) NULL, " + "\r\n";
+            queryString = queryString + "                                               FirmOrderID int NOT NULL, FirmOrderDetailID int NOT NULL, SerialID int NOT NULL, CommodityCode nvarchar(50) NULL, CommodityName nvarchar(200) NULL, Approved bit NOT NULL, InActive bit NOT NULL, InActivePartial bit NOT NULL, VoidTypeName nvarchar(50) NULL, QuantityRequested decimal(18, 2) NULL, QuantityOnhand decimal(18, 2) NULL, Quantity decimal(18, 2) NULL, " + "\r\n";
+            queryString = queryString + "                                               ItemCode nvarchar(50) NULL, ItemQuantity decimal(18, 2) NULL, ItemQuantitySemifinished decimal(18, 2) NULL, ItemQuantityFailure decimal(18, 2) NULL, ItemQuantityReceipted decimal(18, 2) NULL, ItemQuantityLoss decimal(18, 2) NULL, " + "\r\n";
+            queryString = queryString + "                                               QuantitySemifinished decimal(18, 2) NULL, QuantityFinished decimal(18, 2) NULL, QuantityExcess decimal(18, 2) NULL, QuantityShortage decimal(18, 2) NULL, QuantityFailure decimal(18, 2) NULL, Swarfs decimal(18, 2) NULL) " + "\r\n";
+
+            queryString = queryString + "       IF  (@LocalFilterOptionID = 0) " + "\r\n";
+            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(0) + "\r\n";
+            queryString = queryString + "       ELSE " + "\r\n";
+            queryString = queryString + "           BEGIN " + "\r\n";
+            queryString = queryString + "               IF  (@LocalFilterOptionID = 10) " + "\r\n";
+            queryString = queryString + "                   " + this.GetPlannedOrderIndexSQL(10) + "\r\n";
+            queryString = queryString + "               ELSE " + "\r\n";
+            queryString = queryString + "                   BEGIN " + "\r\n";
+            queryString = queryString + "                       IF  (@LocalFilterOptionID = 11) " + "\r\n";
+            queryString = queryString + "                           " + this.GetPlannedOrderIndexSQL(11) + "\r\n";
+            queryString = queryString + "                       ELSE " + "\r\n";
+            queryString = queryString + "                           BEGIN " + "\r\n";
+            queryString = queryString + "                               IF  (@LocalFilterOptionID = 12) " + "\r\n";
+            queryString = queryString + "                                   " + this.GetPlannedOrderIndexSQL(12) + "\r\n";
+            queryString = queryString + "                               ELSE " + "\r\n";
+            queryString = queryString + "                                   " + this.GetPlannedOrderIndexSQL(20) + "\r\n";
+            queryString = queryString + "                           END " + "\r\n";
+            queryString = queryString + "                   END " + "\r\n";
+            queryString = queryString + "           END " + "\r\n";
+
+
+
+            queryString = queryString + "       SELECT      PlannedOrderID, EntryDate, PlannedOrderEntryDate, Reference, Code, VoucherDate, DeliveryDate, CustomerCode, CustomerName, Description, " + "\r\n";
+            queryString = queryString + "                   FirmOrderID, FirmOrderDetailID, SerialID, CommodityCode, CommodityName, Approved, InActive, InActivePartial, VoidTypeName, QuantityRequested, QuantityOnhand, Quantity, (QuantitySemifinished - QuantityShortage - QuantityFailure + QuantityExcess) AS QuantityProduced, " + "\r\n";
+            queryString = queryString + "                   ItemCode, IIF(SerialID = 0, ItemQuantity, 0) AS ItemQuantity, IIF(SerialID = 0, ItemQuantitySemifinished, 0) AS ItemQuantitySemifinished, IIF(SerialID = 0, ItemQuantityFailure, 0) AS ItemQuantityFailure, IIF(SerialID = 0, ItemQuantityReceipted, 0) AS ItemQuantityReceipted, IIF(SerialID = 0, ItemQuantityLoss, 0) AS ItemQuantityLoss, " + "\r\n";
+            queryString = queryString + "                   QuantitySemifinished, (QuantitySemifinished - QuantityFinished) AS QuantitySemifinishedRemains, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, (QuantityFinished - QuantityShortage - QuantityFailure + QuantityExcess) AS QuantityAndExcess, Swarfs " + "\r\n";
+
+            queryString = queryString + "       FROM        @PlannedOrderIndexes " + "\r\n"; //NOTE: QuantityProduced: QuantitySemifinishedRemains + QuantityAndExcess
 
             queryString = queryString + "    END " + "\r\n";
 
             this.totalSmartPortalEntities.CreateStoredProcedure("GetPlannedOrderIndexes", queryString);
+        }
+
+        private string GetPlannedOrderIndexSQL(int filterOptionID)
+        {
+
+            //filterOptionID: 0: NORMAL  PlannedOrderDetails LEFT JOIN FirmOrderDetails: FROM TO
+            //filterOptionID: 10: PENDING PlannedOrderDetails LEFT JOIN FirmOrderDetails WITH: NOT InActive AND (FirmOrderDetails IS NULL (NOT APPROVED YET) OR FirmOrderDetails.QuantityPending > 0))
+            //filterOptionID: 11: 10 AND NOT MATERIAL
+            //filterOptionID: 12: 10 AND WITH MATERIAL
+            //filterOptionID: 20: FINISH  PlannedOrderDetails INNER JOIN FirmOrderDetails: FROM TO
+
+            string queryString = "";
+            
+            queryString = queryString + "    BEGIN " + "\r\n";
+
+            //THE SAME INSERT QUERY
+            queryString = queryString + "       INSERT INTO @PlannedOrderIndexes (PlannedOrderID, EntryDate, PlannedOrderEntryDate, Reference, Code, VoucherDate, DeliveryDate, CustomerCode, CustomerName, Description, " + "\r\n";
+            queryString = queryString + "                                         FirmOrderID, FirmOrderDetailID, SerialID, CommodityCode, CommodityName, Approved, InActive, InActivePartial, VoidTypeName, QuantityRequested, QuantityOnhand, Quantity, " + "\r\n";
+            queryString = queryString + "                                         ItemCode, ItemQuantity, ItemQuantitySemifinished, ItemQuantityFailure, ItemQuantityReceipted, ItemQuantityLoss, " + "\r\n";
+            queryString = queryString + "                                         QuantitySemifinished, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, Swarfs) " + "\r\n";
+
+            queryString = queryString + "       SELECT      PlannedOrders.PlannedOrderID, CAST(PlannedOrders.EntryDate AS DATE) AS EntryDate, PlannedOrders.EntryDate AS PlannedOrderEntryDate, PlannedOrders.Reference, PlannedOrders.Code, PlannedOrders.VoucherDate, PlannedOrders.DeliveryDate, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, PlannedOrders.Description, " + "\r\n";
+            queryString = queryString + "                   FirmOrderDetails.FirmOrderID, FirmOrderDetails.FirmOrderDetailID, 0 AS SerialID, Commodities.Code AS CommodityCode, Commodities.Name AS CommodityName, PlannedOrders.Approved, PlannedOrders.InActive, PlannedOrderDetails.InActivePartial, ISNULL(VoidTypes.Name, VoidTypeDetails.Name) AS VoidTypeName, PlannedOrderDetails.QuantityRequested, PlannedOrderDetails.QuantityOnhand, PlannedOrderDetails.Quantity, " + "\r\n";
+            queryString = queryString + "                   Items.Code AS ItemCode, MaterialIssueSummaries.ItemQuantity, MaterialIssueSummaries.ItemQuantitySemifinished, MaterialIssueSummaries.ItemQuantityFailure, MaterialIssueSummaries.ItemQuantityReceipted, MaterialIssueSummaries.ItemQuantityLoss, " + "\r\n";
+            queryString = queryString + "                   FirmOrderDetails.QuantitySemifinished, FirmOrderDetails.QuantityFinished, FirmOrderDetails.QuantityExcess, FirmOrderDetails.QuantityShortage, FirmOrderDetails.QuantityFailure, FirmOrderDetails.Swarfs " + "\r\n";
+
+            queryString = queryString + "       FROM        PlannedOrders " + "\r\n";
+            queryString = queryString + "                   INNER JOIN  Customers ON " + (filterOptionID == 0 || filterOptionID == 20 ? "PlannedOrders.EntryDate >= @LocalFromDate AND PlannedOrders.EntryDate <= @LocalToDate AND" : "") + " PlannedOrders.OrganizationalUnitID IN (SELECT DISTINCT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @LocalAspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
+            queryString = queryString + "                   INNER JOIN  PlannedOrderDetails ON PlannedOrders.PlannedOrderID = PlannedOrderDetails.PlannedOrderID " + "\r\n";
+            queryString = queryString + "                   INNER JOIN  Commodities ON PlannedOrderDetails.CommodityID = Commodities.CommodityID " + "\r\n";
+            queryString = queryString + "                   INNER JOIN  FirmOrderDetails ON " + this.SQLPendingVsFinished(filterOptionID) + " PlannedOrderDetails.PlannedOrderDetailID = FirmOrderDetails.PlannedOrderDetailID " + "\r\n";
+
+            queryString = queryString + "                   LEFT JOIN   VoidTypes ON PlannedOrders.VoidTypeID = VoidTypes.VoidTypeID " + "\r\n";
+            queryString = queryString + "                   LEFT JOIN   VoidTypes VoidTypeDetails ON PlannedOrderDetails.VoidTypeID = VoidTypeDetails.VoidTypeID " + "\r\n";
+
+            queryString = queryString + "                   LEFT JOIN  (SELECT FirmOrderID, MIN(CommodityID) AS ItemID, SUM(Quantity) AS ItemQuantity, SUM(QuantitySemifinished) AS ItemQuantitySemifinished, SUM(QuantityFailure) AS ItemQuantityFailure, SUM(QuantityReceipted) AS ItemQuantityReceipted, SUM(QuantityLoss) AS ItemQuantityLoss FROM MaterialIssueDetails GROUP BY FirmOrderID) AS MaterialIssueSummaries ON FirmOrderDetails.FirmOrderID = MaterialIssueSummaries.FirmOrderID " + "\r\n";
+            queryString = queryString + "                   LEFT JOIN   Commodities AS Items ON MaterialIssueSummaries.ItemID = Items.CommodityID " + "\r\n";
+
+            if (filterOptionID == 11 || filterOptionID == 12)
+                queryString = queryString + "   WHERE       " + (filterOptionID == 11 ? "" : "NOT") + " MaterialIssueSummaries.FirmOrderID IS NULL " + "\r\n";
+
+
+            queryString = queryString + "       UPDATE      PlannedOrderIndexes " + "\r\n";
+            queryString = queryString + "       SET         SerialID = 1 " + "\r\n";
+            queryString = queryString + "       FROM        @PlannedOrderIndexes PlannedOrderIndexes INNER JOIN (SELECT FirmOrderID, MIN(FirmOrderDetailID) AS FirmOrderDetailID FROM FirmOrderDetails GROUP BY FirmOrderID HAVING (COUNT(*) > 1)) AS CombineFirmOrders ON PlannedOrderIndexes.FirmOrderID = CombineFirmOrders.FirmOrderID " + "\r\n";
+            queryString = queryString + "       WHERE       PlannedOrderIndexes.FirmOrderDetailID <> CombineFirmOrders.FirmOrderDetailID " + "\r\n";
+
+
+            if (filterOptionID == 00 || filterOptionID == 10 || filterOptionID == 11)
+            { //THE SAME INSERT QUERY
+                queryString = queryString + "   INSERT INTO @PlannedOrderIndexes (PlannedOrderID, EntryDate, PlannedOrderEntryDate, Reference, Code, VoucherDate, DeliveryDate, CustomerCode, CustomerName, Description, " + "\r\n";
+                queryString = queryString + "                                     FirmOrderID, FirmOrderDetailID, SerialID, CommodityCode, CommodityName, Approved, InActive, InActivePartial, VoidTypeName, QuantityRequested, QuantityOnhand, Quantity, " + "\r\n";
+                queryString = queryString + "                                     ItemCode, ItemQuantity, ItemQuantitySemifinished, ItemQuantityFailure, ItemQuantityReceipted, ItemQuantityLoss, " + "\r\n";
+                queryString = queryString + "                                     QuantitySemifinished, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, Swarfs) " + "\r\n";
+
+                queryString = queryString + "   SELECT      PlannedOrders.PlannedOrderID, CAST(PlannedOrders.EntryDate AS DATE) AS EntryDate, PlannedOrders.EntryDate AS PlannedOrderEntryDate, PlannedOrders.Reference, PlannedOrders.Code, PlannedOrders.VoucherDate, PlannedOrders.DeliveryDate, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, PlannedOrders.Description, " + "\r\n";
+                queryString = queryString + "               NULL AS FirmOrderID, NULL AS FirmOrderDetailID, NULL AS SerialID, Commodities.Code AS CommodityCode, Commodities.Name AS CommodityName, PlannedOrders.Approved, PlannedOrders.InActive, 0 AS InActivePartial, VoidTypes.Name AS VoidTypeName, PlannedOrderDetails.QuantityRequested, PlannedOrderDetails.QuantityOnhand, PlannedOrderDetails.Quantity, " + "\r\n";
+                queryString = queryString + "               NULL AS ItemCode, NULL AS ItemQuantity, NULL AS ItemQuantitySemifinished, NULL AS ItemQuantityFailure, NULL AS ItemQuantityReceipted, NULL AS ItemQuantityLoss, " + "\r\n";
+                queryString = queryString + "               NULL AS QuantitySemifinished, NULL AS QuantityFinished, NULL AS QuantityExcess, NULL AS QuantityShortage, NULL AS QuantityFailure, NULL AS Swarfs " + "\r\n";
+
+                queryString = queryString + "   FROM        PlannedOrders " + "\r\n"; //(PlannedOrders.Approved = 0 OR Caption IS NULL): (NOT APPROVED || NO DETAIL ROWS)
+                queryString = queryString + "               INNER JOIN  Customers ON " + (filterOptionID == 0 || filterOptionID == 20 ? "PlannedOrders.EntryDate >= @LocalFromDate AND PlannedOrders.EntryDate <= @LocalToDate AND" : "") + " (PlannedOrders.Approved = 0 OR Caption IS NULL) AND PlannedOrders.OrganizationalUnitID IN (SELECT DISTINCT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @LocalAspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
+                queryString = queryString + "               LEFT JOIN   PlannedOrderDetails ON PlannedOrders.PlannedOrderID = PlannedOrderDetails.PlannedOrderID " + "\r\n";
+                queryString = queryString + "               LEFT JOIN   Commodities ON PlannedOrderDetails.CommodityID = Commodities.CommodityID " + "\r\n";
+                queryString = queryString + "               LEFT JOIN   VoidTypes ON PlannedOrders.VoidTypeID = VoidTypes.VoidTypeID " + "\r\n";
+            }
+
+            queryString = queryString + "    END " + "\r\n";
+
+            return queryString;
+        }
+
+        private string SQLPendingVsFinished(int filterOptionID)
+        {
+            bool pendingVsFinished = filterOptionID == 10 || filterOptionID == 11 || filterOptionID == 12;
+            return filterOptionID == 0 ? "" : ("(FirmOrderDetails.InActive " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " FirmOrderDetails.InActivePartial " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " ROUND(FirmOrderDetails.Quantity - (FirmOrderDetails.QuantitySemifinished + FirmOrderDetails.QuantityExcess - FirmOrderDetails.QuantityShortage - FirmOrderDetails.QuantityFailure), " + (int)GlobalEnums.rndQuantity + ") " + (pendingVsFinished ? ">" : "<=") + " 0) AND " + (pendingVsFinished ? "" : "FirmOrderDetails.EntryDate >= @FromDate AND FirmOrderDetails.EntryDate <= @ToDate AND "));
         }
 
         #region X
@@ -235,7 +341,7 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "               UPDATE          FirmOrderDetails        SET InActive = @InActive WHERE PlannedOrderID = @EntityID ; " + "\r\n";
             queryString = queryString + "               UPDATE          FirmOrderMaterials      SET InActive = @InActive WHERE PlannedOrderID = @EntityID ; " + "\r\n";
 
-            queryString = queryString + "               UPDATE          PlannedOrderDetails     SET InActive = @InActive WHERE PlannedOrderID = @EntityID ; " + "\r\n";            
+            queryString = queryString + "               UPDATE          PlannedOrderDetails     SET InActive = @InActive WHERE PlannedOrderID = @EntityID ; " + "\r\n";
             queryString = queryString + "           END " + "\r\n";
             queryString = queryString + "       ELSE " + "\r\n";
             queryString = queryString + "           BEGIN " + "\r\n";
@@ -256,7 +362,7 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "       UPDATE      FirmOrderDetails        SET InActivePartial = @InActivePartial, InActivePartialDate = GetDate(), VoidTypeID = IIF(@InActivePartial = 1, @VoidTypeID, NULL) WHERE PlannedOrderID = @EntityID AND PlannedOrderDetailID = @EntityDetailID AND InActivePartial = ~@InActivePartial ; " + "\r\n";
             queryString = queryString + "       UPDATE      FirmOrderMaterials      SET InActivePartial = @InActivePartial, InActivePartialDate = GetDate(), VoidTypeID = IIF(@InActivePartial = 1, @VoidTypeID, NULL) WHERE FirmOrderID = (SELECT FirmOrderID FROM FirmOrderDetails WHERE PlannedOrderID = @EntityID AND PlannedOrderDetailID = @EntityDetailID) AND InActivePartial = ~@InActivePartial ; " + "\r\n";
 
-            queryString = queryString + "       UPDATE      PlannedOrderDetails     SET InActivePartial = @InActivePartial, InActivePartialDate = GetDate(), VoidTypeID = IIF(@InActivePartial = 1, @VoidTypeID, NULL) WHERE PlannedOrderID = @EntityID AND PlannedOrderDetailID = @EntityDetailID AND InActivePartial = ~@InActivePartial ; " + "\r\n";            
+            queryString = queryString + "       UPDATE      PlannedOrderDetails     SET InActivePartial = @InActivePartial, InActivePartialDate = GetDate(), VoidTypeID = IIF(@InActivePartial = 1, @VoidTypeID, NULL) WHERE PlannedOrderID = @EntityID AND PlannedOrderDetailID = @EntityDetailID AND InActivePartial = ~@InActivePartial ; " + "\r\n";
 
             queryString = queryString + "       IF @@ROWCOUNT = 1 " + "\r\n";
             queryString = queryString + "           BEGIN " + "\r\n";
