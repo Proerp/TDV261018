@@ -7,7 +7,7 @@
 <div>
     @Html.Hidden("LastFilterOptionID", "10")
     
-                @(Html.Kendo().Grid<TotalModel.Models.PlannedOrderIndex>()
+        @(Html.Kendo().Grid<TotalModel.Models.PlannedOrderIndex>()
             .Name("kendoGridIndex")
             .Columns(columns =>
             {
@@ -17,15 +17,16 @@
                 columns.Bound(p => p.Reference).Title("KHSX").Width(10).ClientTemplate("<a href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Edit" }) + "/#= PlannedOrderID #'>#=Reference#</a>");
                 columns.Bound(p => p.Code).Title("Số CT").Width(10).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
                 columns.Bound(p => p.DeliveryDate).Title("GH").Format("{0:dd/MM}").Width(20).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
-                columns.Bound(p => p.CustomerName).Title("Khách hàng").Width(150);
-                columns.Bound(p => p.CommodityName).Title("Mặt hàng").Width(218);
+                columns.Bound(p => p.CustomerName).Title("Khách hàng").Width(120);
+                columns.Bound(p => p.CommodityName).Title("Mặt hàng").Width(207);
                 columns.Bound(p => p.VoidTypeName).Title("Hủy đh").Width(90);
 
                 columns.Bound(p => p.QuantityRequested).Title("ĐH").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmN0 + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
                 columns.Bound(p => p.Quantity).Title("Phải SX").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmN0 + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
                 columns.Bound(p => p.QuantityProduced).Title("Đã SX").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmN0 + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
                 columns.Bound(p => p.QuantitySemifinishedRemains).Title("Chưa ĐG").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(20).ClientFooterTemplate("#= kendo.format('" + Settings.kfmN0 + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
-                columns.Bound(p => p.ItemQuantitySemifinished).Title("Màng Kg").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
+                columns.Bound(p => p.ItemQuantityNet).Title("Màng Kg").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
+                columns.Bound(p => p.ItemQuantitySemifinished).Title("Phôi Kg").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
 
                 columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(92)
                     .ClientTemplate("<a class='k-button' title='Hủy' style='padding-left:5px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Void" }) + "/#= PlannedOrderID #'><span class='k-icon k-edit'></span></a> <a class='k-button' title='Xóa' style='padding-left:0px; padding-right:0px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Delete" }) + "/#= PlannedOrderID #'><span class='k-icon k-delete'></span></a>");
@@ -98,8 +99,9 @@
                 .Aggregates(a => a.Add(x => x.QuantityOnhand).Sum())
                 .Aggregates(a => a.Add(x => x.Quantity).Sum())
                 .Aggregates(a => a.Add(x => x.QuantityProduced).Sum())
-                .Aggregates(a => a.Add(x => x.ItemQuantitySemifinished).Sum())
-                .Aggregates(a => a.Add(x => x.QuantitySemifinishedRemains).Sum())
+                .Aggregates(a => a.Add(x => x.QuantitySemifinishedRemains).Sum())                
+                .Aggregates(a => a.Add(x => x.ItemQuantityNet).Sum())
+                .Aggregates(a => a.Add(x => x.ItemQuantitySemifinished).Sum())                                                   
                 )
             .HtmlAttributes(new { @class = "grid-class" }))
 </div>

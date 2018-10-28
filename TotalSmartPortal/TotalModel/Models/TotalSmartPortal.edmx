@@ -13845,6 +13845,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Property Type="Decimal" Name="QuantityFailure" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="QuantityAndExcess" Nullable="true" Precision="21" Scale="2" />
           <Property Type="Decimal" Name="Swarfs" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemQuantityNet" Nullable="true" Precision="19" Scale="2" />
           </ComplexType>
         <ComplexType Name="PlannedOrderViewDetail">
           <Property Type="Int32" Name="PlannedOrderDetailID" Nullable="false" />
@@ -20803,6 +20804,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="QuantityFailure" ColumnName="QuantityFailure" />
                 <ScalarProperty Name="QuantityAndExcess" ColumnName="QuantityAndExcess" />
                 <ScalarProperty Name="Swarfs" ColumnName="Swarfs" />
+                <ScalarProperty Name="ItemQuantityNet" ColumnName="ItemQuantityNet" />
                 </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
