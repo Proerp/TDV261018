@@ -1,3 +1,3 @@
-﻿require(["kendoWidgetReadonly", "commonEditWithDetailInvoked", "gridWidgetQuantityRemainsSubscribeChange", "gridWidgetSubscribeChange", "gridDatasourceFinishedProductSubscribe", "gridEditorCommodityInvoked"], function (kendoWidgetReadonly, commonEditWithDetailInvoked, gridWidgetQuantityRemainsSubscribeChange, gridWidgetSubscribeChange, gridDatasourceFinishedProductSubscribe, gridEditorCommodityInvoked) {
+﻿require([], function () {
 
 });
