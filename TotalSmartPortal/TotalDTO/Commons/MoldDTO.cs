@@ -13,21 +13,21 @@ namespace TotalDTO.Commons
         [UIHint("AutoCompletes/MoldBase")]
         [Required(ErrorMessage = "Vui lòng nhập khuôn")]
         string Code { get; set; }
-
-        [Display(Name = "tên khuôn")]
-        [Required(ErrorMessage = "Vui lòng nhập tên khuôn")]
         string Name { get; set; }
-
-        [Display(Name = "Số sản phẩm/ khuôn")]
-        [Range(1, 100, ErrorMessage = "Vui lòng nhập số SP/ khuôn")]
         decimal Quantity { get; set; }
     }
 
     public class MoldBaseDTO : BaseDTO, IMoldBaseDTO
     {
         public int MoldID { get; set; }
+        [Display(Name = "Khuôn")]
+        [Required(ErrorMessage = "Vui lòng nhập khuôn")]
         public string Code { get; set; }
+        [Display(Name = "Tên khuôn")]
+        [Required(ErrorMessage = "Vui lòng nhập tên khuôn")]
         public string Name { get; set; }
+        [Display(Name = "Số sản phẩm/ khuôn")]
+        [Range(1, 100, ErrorMessage = "Vui lòng nhập số SP/ khuôn")]
         public decimal Quantity { get; set; }
     }
 
