@@ -29,9 +29,9 @@ namespace TotalPortal.Areas.Commons.APIs
 
         public JsonResult GetEmployeeIndexes([DataSourceRequest] DataSourceRequest request)
         {
-            ICollection<EmployeeIndex> EmployeeIndexes = this.employeeAPIRepository.GetEntityIndexes<EmployeeIndex>(User.Identity.GetUserId(), HomeSession.GetGlobalFromDate(this.HttpContext), HomeSession.GetGlobalToDate(this.HttpContext));
+            ICollection<EmployeeIndex> employeeIndexes = this.employeeAPIRepository.GetEntityIndexes<EmployeeIndex>(User.Identity.GetUserId(), HomeSession.GetGlobalFromDate(this.HttpContext), HomeSession.GetGlobalToDate(this.HttpContext));
 
-            DataSourceResult response = EmployeeIndexes.ToDataSourceResult(request);
+            DataSourceResult response = employeeIndexes.ToDataSourceResult(request);
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }

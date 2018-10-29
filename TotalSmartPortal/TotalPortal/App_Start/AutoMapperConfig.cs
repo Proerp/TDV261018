@@ -270,7 +270,14 @@ namespace TotalPortal.App_Start
                 cfg.CreateMap<Employee, EmployeeBaseDTO>();
                 cfg.CreateMap<EmployeePrimitiveDTO, Employee>();
 
-                cfg.CreateMap<Employee, EmployeeBaseDTO>();
+
+
+                cfg.CreateMap<Mold, MoldViewModel>();
+                cfg.CreateMap<Mold, MoldDTO>();
+                cfg.CreateMap<Mold, MoldBaseDTO>();
+                cfg.CreateMap<MoldPrimitiveDTO, Mold>();
+
+
 
                 cfg.CreateMap<CommodityPrice, CommodityPriceViewModel>();
                 cfg.CreateMap<CommodityPrice, CommodityPriceDTO>();

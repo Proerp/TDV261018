@@ -40,6 +40,8 @@ namespace TotalBase.Enums
             Item = 8002006,
             Product = 8002008,
 
+            Mold = 8007,
+
             Promotion = 8003,
             Employee = 8005,
             CommodityPrice = 8006,

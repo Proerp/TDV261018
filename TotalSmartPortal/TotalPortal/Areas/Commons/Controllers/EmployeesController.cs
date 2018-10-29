@@ -12,8 +12,8 @@ namespace TotalPortal.Areas.Commons.Controllers
 {
     public class EmployeesController : GenericSimpleController<Employee, EmployeeDTO, EmployeePrimitiveDTO, EmployeeViewModel>
     {
-        public EmployeesController(IEmployeeService EmployeeService, IEmployeeSelectListBuilder EmployeeViewModelSelectListBuilder)
-            : base(EmployeeService, EmployeeViewModelSelectListBuilder)
+        public EmployeesController(IEmployeeService mmployeeService, IEmployeeSelectListBuilder employeeViewModelSelectListBuilder)
+            : base(mmployeeService, employeeViewModelSelectListBuilder)
         {
         }
     }

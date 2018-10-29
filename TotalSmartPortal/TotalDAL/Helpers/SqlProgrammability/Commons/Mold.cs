@@ -21,6 +21,7 @@ namespace TotalDAL.Helpers.SqlProgrammability.Commons
             this.GetMoldIndexes();
 
             this.MoldEditable();
+            this.MoldDeletable();
 
 
             this.GetCommodityMolds();
@@ -43,7 +44,7 @@ namespace TotalDAL.Helpers.SqlProgrammability.Commons
             queryString = queryString + " AS " + "\r\n";
             queryString = queryString + "    BEGIN " + "\r\n";
 
-            queryString = queryString + "       SELECT      MoldID, Code, Name, Quantity, Weight, CyclePerHours, InActive, Remarks " + "\r\n";
+            queryString = queryString + "       SELECT      MoldID, Code, Name, Quantity, MoldWidth, MoldLength, ItemWidth, ItemLength, ItemHigh, Remarks, InActive " + "\r\n";
             queryString = queryString + "       FROM        Molds " + "\r\n";
             queryString = queryString + "       " + "\r\n";
 
@@ -54,16 +55,20 @@ namespace TotalDAL.Helpers.SqlProgrammability.Commons
 
         private void MoldEditable()
         {
-            string[] queryArray = new string[1];
-
-            queryArray[0] = " SELECT TOP 1 @FoundEntity = MoldID FROM Molds WHERE @EntityID = @EntityID";
-
-            //queryArray[0] = " SELECT TOP 1 @FoundEntity = MoldID FROM Molds WHERE MoldID = @EntityID AND (InActive = 1 OR InActivePartial = 1)"; //Don't allow approve after void
-            //queryArray[1] = " SELECT TOP 1 @FoundEntity = MoldID FROM GoodsIssueDetails WHERE MoldID = @EntityID ";
+            string[] queryArray = new string[0];
 
             this.totalSmartPortalEntities.CreateProcedureToCheckExisting("MoldEditable", queryArray);
         }
 
+        private void MoldDeletable()
+        {
+            string[] queryArray = new string[2];
+
+            queryArray[0] = " SELECT TOP 1 @FoundEntity = MoldID FROM CommodityMolds WHERE @EntityID = @EntityID ";
+            queryArray[1] = " SELECT TOP 1 @FoundEntity = MoldID FROM PlannedOrderDetails WHERE @EntityID = @EntityID ";
+
+            this.totalSmartPortalEntities.CreateProcedureToCheckExisting("MoldDeletable", queryArray);
+        }
 
 
 

@@ -25,6 +25,14 @@ namespace TotalPortal.Areas.Commons.APIs
             this.moldAPIRepository = moldAPIRepository;
         }
 
+        public JsonResult GetMoldIndexes([DataSourceRequest] DataSourceRequest request)
+        {
+            ICollection<MoldIndex> moldIndexes = this.moldAPIRepository.GetEntityIndexes<MoldIndex>(User.Identity.GetUserId(), HomeSession.GetGlobalFromDate(this.HttpContext), HomeSession.GetGlobalToDate(this.HttpContext));
+
+            DataSourceResult response = moldIndexes.ToDataSourceResult(request);
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
 
         public JsonResult GetMoldBases(string searchText, int commodityID)
         {

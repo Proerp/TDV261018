@@ -4028,5 +4028,14 @@ namespace TotalModel.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("GetSemifinishedProductPendingMaterialQuantityRemains", materialIssueDetailIDParameter);
         }
+    
+        public virtual ObjectResult<string> MoldDeletable(Nullable<int> entityID)
+        {
+            var entityIDParameter = entityID.HasValue ?
+                new ObjectParameter("EntityID", entityID) :
+                new ObjectParameter("EntityID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("MoldDeletable", entityIDParameter);
+        }
     }
 }

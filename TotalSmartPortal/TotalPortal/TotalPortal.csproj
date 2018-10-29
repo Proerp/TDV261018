@@ -267,6 +267,7 @@
     <Compile Include="Areas\Commons\Builders\ICustomerTypeSelectListBuilder.cs" />
     <Compile Include="Areas\Commons\Builders\ICustomerSelectListBuilder.cs" />
     <Compile Include="Areas\Commons\Builders\IEmployeeSelectListBuilder.cs" />
+    <Compile Include="Areas\Commons\Builders\IMoldSelectListBuilder.cs" />
     <Compile Include="Areas\Commons\Builders\IMonetaryAccountSelectListBuilder.cs" />
     <Compile Include="Areas\Commons\Builders\IPackingMaterialSelectListBuilder.cs" />
     <Compile Include="Areas\Commons\Builders\IPriceCategorySelectListBuilder.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Areas\Commons\Controllers\CommodityPricesController.cs" />
     <Compile Include="Areas\Commons\Controllers\CustomersController.cs" />
     <Compile Include="Areas\Commons\Controllers\EmployeesController.cs" />
+    <Compile Include="Areas\Commons\Controllers\MoldsController.cs" />
     <Compile Include="Areas\Commons\Controllers\PromotionsController.cs" />
     <Compile Include="Areas\Commons\ViewModels\CommodityPriceViewModel.cs" />
     <Compile Include="Areas\Commons\ViewModels\CommodityViewModel.cs" />
@@ -297,6 +299,7 @@
     <Compile Include="Areas\Commons\ViewModels\Helpers\ITransferOrderTypeDropDownViewModel.cs" />
     <Compile Include="Areas\Commons\ViewModels\Helpers\IVehicleDropDownViewModel.cs" />
     <Compile Include="Areas\Commons\ViewModels\Helpers\IWarehouseAdjustmentTypeDropDownViewModel.cs" />
+    <Compile Include="Areas\Commons\ViewModels\MoldViewModel.cs" />
     <Compile Include="Areas\Commons\ViewModels\PromotionViewModel.cs" />
     <Compile Include="Areas\Generals\APIs\UserAPIsController.cs" />
     <Compile Include="Areas\Generals\GeneralsAreaRegistration.cs" />
@@ -1501,6 +1504,10 @@
     <Content Include="Areas\Inventories\Views\ItemReceipts\Index.cshtml" />
     <Content Include="Areas\Inventories\Views\ItemReceipts\Print.cshtml" />
     <Content Include="Areas\Inventories\Views\GoodsReceipts\Approve.cshtml" />
+    <Content Include="Areas\Commons\Views\Molds\Create.cshtml" />
+    <Content Include="Areas\Commons\Views\Molds\Edit.cshtml" />
+    <Content Include="Areas\Commons\Views\Molds\Index.cshtml" />
+    <Content Include="Areas\Commons\Views\Molds\_Mold.cshtml" />
     <None Include="Properties\PublishProfiles\TDV.pubxml" />
     <None Include="Properties\PublishProfiles\VCP.pubxml">
       <SubType>Designer</SubType>
@@ -1555,6 +1562,10 @@
     <Content Include="Scripts\Controllers\Commons\Materials\Delete.js" />
     <Content Include="Scripts\Controllers\Commons\Materials\Edit.js" />
     <Content Include="Scripts\Controllers\Commons\Materials\Index.js" />
+    <Content Include="Scripts\Controllers\Commons\Molds\Create.js" />
+    <Content Include="Scripts\Controllers\Commons\Molds\Delete.js" />
+    <Content Include="Scripts\Controllers\Commons\Molds\Edit.js" />
+    <Content Include="Scripts\Controllers\Commons\Molds\Index.js" />
     <Content Include="Scripts\Controllers\Commons\Products\Create.js" />
     <Content Include="Scripts\Controllers\Commons\Products\Delete.js" />
     <Content Include="Scripts\Controllers\Commons\Products\Edit.js" />

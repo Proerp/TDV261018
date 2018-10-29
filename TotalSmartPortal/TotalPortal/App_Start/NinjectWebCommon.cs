@@ -354,10 +354,11 @@ namespace TotalPortal.App_Start
                 kernel.Bind<ITransferOrderTypeRepository>().To<TransferOrderTypeRepository>();
 
 
-                //kernel.Bind<IMoldService>().To<MoldService>();
+                kernel.Bind<IMoldService>().To<MoldService>();
                 kernel.Bind<IMoldRepository>().To<MoldRepository>();
                 kernel.Bind<IMoldAPIRepository>().To<MoldAPIRepository>();
-                //kernel.Bind<IMoldSelectListBuilder>().To<MoldSelectListBuilder>();
+                kernel.Bind<IMoldSelectListBuilder>().To<MoldSelectListBuilder>();
+
 
                 //kernel.Bind<IBomService>().To<BomService>();
                 kernel.Bind<IBomRepository>().To<BomRepository>();

@@ -6270,6 +6270,9 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Parameter Name="EntityID" Type="int" Mode="In" />
           <Parameter Name="Approved" Type="bit" Mode="In" />
         </Function>
+        <Function Name="MoldDeletable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EntityID" Type="int" Mode="In" />
+        </Function>
         <Function Name="MoldEditable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="EntityID" Type="int" Mode="In" />
         </Function>
@@ -12476,6 +12479,9 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
             <End Role="FirmOrderDetail" EntitySet="FirmOrderDetails" />
             <End Role="SemifinishedProductDetail" EntitySet="SemifinishedProductDetails" />
           </AssociationSet>
+          <FunctionImport Name="MoldDeletable" ReturnType="Collection(String)">
+            <Parameter Name="EntityID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="AccountInvoiceIndex">
           <Property Type="Int32" Name="AccountInvoiceID" Nullable="false" />
@@ -15259,17 +15265,20 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Property Type="Boolean" Name="IsDefault" Nullable="false" />
           <Property Type="Boolean" Name="InActive" Nullable="false" />
           <Property Type="String" Name="MoldCode" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="MoldName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MoldName" Nullable="false" MaxLength="100" />
         </ComplexType>
         <ComplexType Name="MoldIndex">
           <Property Type="Int32" Name="MoldID" Nullable="false" />
           <Property Type="String" Name="Code" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" />
           <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="CyclePerHours" Nullable="false" Precision="18" Scale="2" />
           <Property Type="Boolean" Name="InActive" Nullable="false" />
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="MoldWidth" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="MoldLength" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemWidth" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemLength" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemHigh" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
         <ComplexType Name="SemifinishedHandoverIndex">
           <Property Type="Int32" Name="SemifinishedHandoverID" Nullable="false" />
@@ -21650,10 +21659,13 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="CyclePerHours" ColumnName="CyclePerHours" />
                 <ScalarProperty Name="InActive" ColumnName="InActive" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="MoldWidth" ColumnName="MoldWidth" />
+                <ScalarProperty Name="MoldLength" ColumnName="MoldLength" />
+                <ScalarProperty Name="ItemWidth" ColumnName="ItemWidth" />
+                <ScalarProperty Name="ItemLength" ColumnName="ItemLength" />
+                <ScalarProperty Name="ItemHigh" ColumnName="ItemHigh" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -22965,6 +22977,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="MoldDeletable" FunctionName="TotalSmartPortalModel.Store.MoldDeletable" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

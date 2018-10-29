@@ -17,9 +17,12 @@ namespace TotalModel.Models
         public string Code { get; set; }
         public string Name { get; set; }
         public decimal Quantity { get; set; }
-        public decimal Weight { get; set; }
-        public decimal CyclePerHours { get; set; }
         public bool InActive { get; set; }
         public string Remarks { get; set; }
+        public Nullable<decimal> MoldWidth { get; set; }
+        public Nullable<decimal> MoldLength { get; set; }
+        public Nullable<decimal> ItemWidth { get; set; }
+        public Nullable<decimal> ItemLength { get; set; }
+        public Nullable<decimal> ItemHigh { get; set; }
     }
 }

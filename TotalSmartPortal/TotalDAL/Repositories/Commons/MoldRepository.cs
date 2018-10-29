@@ -12,7 +12,7 @@ namespace TotalDAL.Repositories.Commons
     public class MoldRepository : GenericRepository<Mold>, IMoldRepository
     {
         public MoldRepository(TotalSmartPortalEntities totalSmartPortalEntities)
-            : base(totalSmartPortalEntities)
+            : base(totalSmartPortalEntities, "MoldEditable", null, "MoldDeletable")
         {
         }
     }
