@@ -51,5 +51,6 @@ namespace TotalModel.Models
         public Nullable<decimal> QuantityAndExcess { get; set; }
         public Nullable<decimal> Swarfs { get; set; }
         public Nullable<decimal> ItemQuantityNet { get; set; }
+        public Nullable<int> HasProductionOrders { get; set; }
     }
 }

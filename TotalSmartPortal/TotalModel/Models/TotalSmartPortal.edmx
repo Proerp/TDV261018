@@ -693,6 +693,7 @@
           <Property Name="Specs" Type="nvarchar" MaxLength="800" />
           <Property Name="Description" Type="nvarchar" MaxLength="800" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="800" />
+          <Property Name="HasProductionOrders" Type="int" />
           <Property Name="VoidTypeID" Type="int" />
           <Property Name="Approved" Type="bit" Nullable="false" />
           <Property Name="InActive" Type="bit" Nullable="false" />
@@ -13846,6 +13847,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Property Type="Decimal" Name="QuantityAndExcess" Nullable="true" Precision="21" Scale="2" />
           <Property Type="Decimal" Name="Swarfs" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="ItemQuantityNet" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Int32" Name="HasProductionOrders" Nullable="true" />
           </ComplexType>
         <ComplexType Name="PlannedOrderViewDetail">
           <Property Type="Int32" Name="PlannedOrderDetailID" Nullable="false" />
@@ -17914,6 +17916,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <NavigationProperty Name="Mold" Relationship="TotalSmartPortalModel.FK_FirmOrderDetails_Molds" FromRole="FirmOrderDetail" ToRole="Mold" />
           <NavigationProperty Name="VoidType" Relationship="TotalSmartPortalModel.FK_FirmOrderDetails_VoidTypes" FromRole="FirmOrderDetail" ToRole="VoidType" />
           <NavigationProperty Name="SemifinishedProductDetails" Relationship="TotalSmartPortalModel.FK_SemifinishedProductDetails_FirmOrderDetails" FromRole="FirmOrderDetail" ToRole="SemifinishedProductDetail" />
+          <Property Name="HasProductionOrders" Type="Int32" />
         </EntityType>
         <Association Name="FK_FirmOrderDetails_Boms">
           <End Type="TotalSmartPortalModel.Bom" Role="Bom" Multiplicity="1" />
@@ -20805,6 +20808,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="QuantityAndExcess" ColumnName="QuantityAndExcess" />
                 <ScalarProperty Name="Swarfs" ColumnName="Swarfs" />
                 <ScalarProperty Name="ItemQuantityNet" ColumnName="ItemQuantityNet" />
+                <ScalarProperty Name="HasProductionOrders" ColumnName="HasProductionOrders" />
                 </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -22922,6 +22926,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <EntitySetMapping Name="FirmOrderDetails">
             <EntityTypeMapping TypeName="TotalSmartPortalModel.FirmOrderDetail">
               <MappingFragment StoreEntitySet="FirmOrderDetails">
+                <ScalarProperty Name="HasProductionOrders" ColumnName="HasProductionOrders" />
                 <ScalarProperty Name="InActivePartialDate" ColumnName="InActivePartialDate" />
                 <ScalarProperty Name="InActivePartial" ColumnName="InActivePartial" />
                 <ScalarProperty Name="InActive" ColumnName="InActive" />

@@ -252,6 +252,20 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             string queryString = " @EntityID int, @SaveRelativeOption int " + "\r\n"; //SaveRelativeOption: 1: Update, -1:Undo
             queryString = queryString + " WITH ENCRYPTION " + "\r\n";
             queryString = queryString + " AS " + "\r\n";
+            queryString = queryString + "    BEGIN " + "\r\n";
+            queryString = queryString + "       UPDATE  FirmOrderDetails SET HasProductionOrders = IIF(@SaveRelativeOption = 1, 0, NULL) WHERE FirmOrderID IN (SELECT FirmOrderID FROM ProductionOrderDetails WHERE ProductionOrderID = @EntityID) ; " + "\r\n";
+            queryString = queryString + "       IF ((SELECT Approved FROM ProductionOrders WHERE ProductionOrderID = @EntityID AND Approved = 1) = 1) " + "\r\n";
+            queryString = queryString + "           BEGIN " + "\r\n";
+            queryString = queryString + "               UPDATE      ProductionOrders  SET Approved = 0 WHERE ProductionOrderID = @EntityID AND Approved = 1" + "\r\n"; //CLEAR APPROVE BEFORE CALL ProductionOrderToggleApproved
+            queryString = queryString + "               IF @@ROWCOUNT = 1 " + "\r\n";
+            queryString = queryString + "                   EXEC        ProductionOrderToggleApproved @EntityID, 1 " + "\r\n";
+            queryString = queryString + "               ELSE " + "\r\n";
+            queryString = queryString + "                   BEGIN " + "\r\n";
+            queryString = queryString + "                       DECLARE     @msg NVARCHAR(300) = N'Dữ liệu không tồn tại hoặc đã duyệt'; " + "\r\n";
+            queryString = queryString + "                       THROW       61001,  @msg, 1; " + "\r\n";
+            queryString = queryString + "                   END " + "\r\n";
+            queryString = queryString + "           END " + "\r\n";
+            queryString = queryString + "    END " + "\r\n";
 
             this.totalSmartPortalEntities.CreateStoredProcedure("ProductionOrderSaveRelative", queryString);
         }
@@ -310,6 +324,7 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "       IF @@ROWCOUNT = 1 " + "\r\n";
             queryString = queryString + "           BEGIN " + "\r\n";
             queryString = queryString + "               UPDATE          ProductionOrderDetails  SET Approved = @Approved WHERE ProductionOrderID = @EntityID ; " + "\r\n";
+            queryString = queryString + "               UPDATE          FirmOrderDetails SET HasProductionOrders = IIF(@Approved = 1, 1, 0) WHERE FirmOrderID IN (SELECT FirmOrderID FROM ProductionOrderDetails WHERE ProductionOrderID = @EntityID) ; " + "\r\n";
             queryString = queryString + "           END " + "\r\n";
             queryString = queryString + "       ELSE " + "\r\n";
             queryString = queryString + "           BEGIN " + "\r\n";

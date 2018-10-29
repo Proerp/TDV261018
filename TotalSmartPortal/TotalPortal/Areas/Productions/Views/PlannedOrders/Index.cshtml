@@ -35,7 +35,7 @@
             {
                 toolbar.Template(@<text>
                     <button type="button" class="k-button" onclick="createWizard()"> <img src="~/Content/Images/Mains/Size24/folder-documents-icon-24.png" /> Lập đơn hàng </button>
-                    <button type="button" class="k-button" onclick="window.open('@Url.Action("Print", "PlannedOrders", new { id = @Model.PlannedOrderID })')"> <img src="~/Content/Images/New/Printer-green-24.png" /> In </button>
+                    <button type="button" class="k-button" onclick="callPrint()"> <img src="~/Content/Images/New/Printer-green-24.png" /> In </button>
                     <div class="toolbar" style="float: right;">
                         <label>Nhập số KHSX, số CT, tên KH hoặc thành phẩm</label>
                         <input id="indexFilterText" class="k-textbox" style="text-align: center; " onkeyup="indexFilterText_KeyUp()" />
@@ -134,6 +134,9 @@
         });
     }
 
+    function callPrint() {
+        window.open('@Url.Action("Print", "PlannedOrders", new { area = "Productions" })' + "/" + $("#ShowFilterOptionID").val() + "/" + $("#ShowFilterOptionID").val())
+    }
 
     decoratingKindex = function (idx, elem) {
 
