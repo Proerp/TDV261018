@@ -42,6 +42,7 @@ namespace TotalDTO.Inventories
         public string FirmOrderSpecs { get; set; }
         [Display(Name = "Mã thành phẩm")]
         public string FirmOrderSpecification { get; set; }
+        [Display(Name = "Thành phẩm")]
         public string FirmOrderSpecificationSpecs { get { return this.FirmOrderSpecs + " (" + this.FirmOrderSpecification + ")"; } }
 
         [Display(Name = "Số chứng từ")]

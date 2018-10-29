@@ -102,12 +102,14 @@ namespace TotalDAL.Helpers.SqlProgrammability.Inventories
             queryString = queryString + " WITH ENCRYPTION " + "\r\n";
             queryString = queryString + " AS " + "\r\n";
 
-            queryString = queryString + "       SELECT          " + (int)@GlobalEnums.MaterialIssueTypeID.FirmOrders + " AS MaterialIssueTypeID, ProductionOrderDetails.ProductionOrderDetailID, ProductionOrderDetails.ProductionOrderID, ProductionOrderDetails.PlannedOrderID, ProductionOrderDetails.FirmOrderID, FirmOrders.Code AS FirmOrderCode, FirmOrders.Reference AS FirmOrderReference, FirmOrders.EntryDate AS FirmOrderEntryDate, FirmOrders.Specs AS FirmOrderSpecs, FirmOrders.Specification AS FirmOrderSpecification, FirmOrders.TotalQuantity, FirmOrders.TotalQuantitySemifinished, " + "\r\n";
+            queryString = queryString + "       SELECT          " + (int)@GlobalEnums.MaterialIssueTypeID.FirmOrders + " AS MaterialIssueTypeID, ProductionOrderDetails.ProductionOrderDetailID, ProductionOrderDetails.ProductionOrderID, ProductionOrderDetails.PlannedOrderID, ProductionOrderDetails.FirmOrderID, FirmOrders.Code AS FirmOrderCode, FirmOrders.Reference AS FirmOrderReference, FirmOrders.EntryDate AS FirmOrderEntryDate, FirmOrders.Specs AS FirmOrderSpecs, FirmOrders.Specification AS FirmOrderSpecification, FirmOrders.TotalQuantity, FirmOrderRemains.TotalQuantitySemifinished, " + "\r\n";
             queryString = queryString + "                       ProductionOrderDetails.CustomerID, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, Warehouses.WarehouseID, Warehouses.Code AS WarehouseCode, Warehouses.Name AS WarehouseName " + "\r\n";
 
-            queryString = queryString + "       FROM            ProductionOrderDetails " + "\r\n";//LocationID = @LocationID AND 
-            queryString = queryString + "                       INNER JOIN FirmOrders ON ProductionOrderDetails.FirmOrderID IN (SELECT DISTINCT FirmOrderID FROM FirmOrderDetails WHERE Approved = 1 AND InActive = 0 AND InActivePartial = 0 AND ROUND(Quantity - QuantitySemifinished, " + (int)GlobalEnums.rndQuantity + ") > 0) AND ProductionOrderDetails.Approved = 1 AND ProductionOrderDetails.InActive = 0 AND ProductionOrderDetails.InActivePartial = 0 AND ProductionOrderDetails.FirmOrderID = FirmOrders.FirmOrderID " + "\r\n";
-
+            queryString = queryString + "       FROM           (SELECT FirmOrderID, ROUND(SUM(Quantity - (QuantitySemifinished - QuantityShortage - QuantityFailure + QuantityExcess)), " + (int)GlobalEnums.rndQuantity + ") AS TotalQuantitySemifinished FROM FirmOrderDetails WHERE Approved = 1 AND InActive = 0 AND InActivePartial = 0 AND ROUND(Quantity - (QuantitySemifinished - QuantityShortage - QuantityFailure + QuantityExcess), " + (int)GlobalEnums.rndQuantity + ") > 0 GROUP BY FirmOrderID) AS FirmOrderRemains " + "\r\n";
+            queryString = queryString + "                       INNER JOIN ProductionOrderDetails ON ProductionOrderDetails.Approved = 1 AND ProductionOrderDetails.InActive = 0 AND ProductionOrderDetails.InActivePartial = 0 AND FirmOrderRemains.FirmOrderID = ProductionOrderDetails.FirmOrderID " + "\r\n";//LocationID = @LocationID AND 
+            queryString = queryString + "                       INNER JOIN FirmOrders ON FirmOrderRemains.FirmOrderID = FirmOrders.FirmOrderID " + "\r\n";
+            
+            //ProductionOrderDetails.FirmOrderID IN 
             queryString = queryString + "                       INNER JOIN Customers ON ProductionOrderDetails.CustomerID = Customers.CustomerID " + "\r\n";
 
             queryString = queryString + "                       INNER JOIN Warehouses ON Warehouses.WarehouseID = 6 " + "\r\n";
