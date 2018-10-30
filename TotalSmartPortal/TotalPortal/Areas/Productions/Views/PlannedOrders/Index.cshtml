@@ -60,8 +60,8 @@
                                     .Events(e => e.Change("indexFilterText_KeyUp"))
                             )
 
-                            @Html.Kendo().DatePicker().Name("ExtendedFromDate").Value(Model.GlobalFromDate).Events(e => e.Change("indexFilterText_KeyUp")).HtmlAttributes(new { @class = "input-class", style = "text-align: center; width:118px" })
-                            @Html.Kendo().DatePicker().Name("ExtendedToDate").Value(Model.GlobalToDate).Events(e => e.Change("indexFilterText_KeyUp")).HtmlAttributes(new { @class = "input-class", style = "text-align: center; width:118px" })
+                            @Html.Kendo().DatePickerFor(m => m.GlobalFromDate).Events(e => e.Change("indexFilterText_KeyUp")).HtmlAttributes(new { @class = "input-class", style = "text-align: center; width:118px" })
+                            @Html.Kendo().DatePickerFor(m => m.GlobalToDate).Events(e => e.Change("indexFilterText_KeyUp")).HtmlAttributes(new { @class = "input-class", style = "text-align: center; width:118px" })
                         </span>
 
 
@@ -117,8 +117,8 @@
         var indexFilterText = $("#indexFilterText").val();
         return {
             withExtendedSearch: true, //indexFilterText && indexFilterText.length >= "@Settings.AutoCompleteMinLenght03" ? true : false,
-            extendedFromDate: $("#ExtendedFromDate").val(),
-            extendedToDate: $("#ExtendedToDate").val(),
+            extendedFromDate: $("#GlobalFromDate").val(),
+            extendedToDate: $("#GlobalToDate").val(),
             filterOptionID: $("#ShowFilterOptionID").val()
         };
     }
@@ -164,8 +164,11 @@
 
     function indexFilterText_KeyUp(readDataSource) {
         var indexFilterText = $("#indexFilterText").val(), gridDetails = $("#kendoGridIndex").data("kendoGrid");
-
-        if (readDataSource == true || (indexFilterText && indexFilterText.length >= "@Settings.AutoCompleteMinLenght03") || $("#LastFilterOptionID").val() != $("#ShowFilterOptionID").val()) {
+        @*alert(indexFilterText === "");
+        alert(indexFilterText.length >= "@Settings.AutoCompleteMinLenght03");
+        alert(readDataSource);
+        alert($("#LastFilterOptionID").val() != $("#ShowFilterOptionID").val());*@
+        if (readDataSource == true || (indexFilterText === "" || indexFilterText.length >= "@Settings.AutoCompleteMinLenght03") || $("#LastFilterOptionID").val() != $("#ShowFilterOptionID").val()) {
             $("#LastFilterOptionID").val($("#ShowFilterOptionID").val());
             gridDetails.dataSource.filter({
                 logic: "or",
