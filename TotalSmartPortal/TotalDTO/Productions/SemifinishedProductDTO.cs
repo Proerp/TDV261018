@@ -106,6 +106,11 @@ namespace TotalDTO.Productions
 
             if (Math.Round(this.StopSequenceNo - this.StartSequenceNo + 1, GlobalEnums.rndN0, MidpointRounding.AwayFromZero) != this.FoilCounts) yield return new ValidationResult("Lỗi số lượng tấm phôi", new[] { "FoilCounts" });
             if (Math.Round(this.FoilCounts * this.FoilUnitWeights / this.FoilUnitCounts, GlobalEnums.rndQuantity, MidpointRounding.AwayFromZero) != this.FoilWeights) yield return new ValidationResult("Lỗi tổng số kg phôi", new[] { "FoilWeights" });
+
+            foreach (SemifinishedProductDetailDTO semifinishedProductDetailDTO in this.DtoDetails())
+            {
+                if (Math.Round(this.FoilCounts * semifinishedProductDetailDTO.MoldQuantity, GlobalEnums.rndQuantity, MidpointRounding.AwayFromZero) != semifinishedProductDetailDTO.Quantity) yield return new ValidationResult("Lỗi số thành phẩm", new[] { "FoilCounts" });
+            }
         }
 
         public override void PerformPresaveRule()
