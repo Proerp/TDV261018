@@ -29,12 +29,6 @@ namespace TotalService.Productions
             return this.GetViewDetails(parameters);
         }
 
-        public override bool Save(SemifinishedProductDTO semifinishedProductDTO)
-        {
-            semifinishedProductDTO.SemifinishedProductViewDetails.RemoveAll(x => x.Quantity == 0);
-            return base.Save(semifinishedProductDTO);
-        }
-
 
         public decimal GetMaterialQuantityRemains(int? materialIssueDetailID) { return this.semifinishedProductRepository.GetMaterialQuantityRemains(materialIssueDetailID); }
     }
