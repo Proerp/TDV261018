@@ -104,11 +104,17 @@
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.EditorFor(d => d.CrucialWorker, new { EmployeeDisplayName = @Model.GetDisplayName(m => m.CrucialWorker) })
+        </div>
+
+        @Html.HiddenFor(model => model.PlannedOrderID)
         @Html.HiddenFor(model => model.FirmOrderID)
-        @if (false)
+        @if (true)
         {
             <div class="form-group">
-                @Html.LabelFor(model => model.FirmOrderReference)
+                <a style="color: blue; " href="@Url.Action("Edit", "PlannedOrders", new { area = "Productions", id = Model.PlannedOrderID })"> @Html.LabelFor(model => model.FirmOrderReference) </a>
+                
                 <div class="div-input">
                     @Html.Kendo().MaskedTextBoxFor(model => model.FirmOrderReference).HtmlAttributes(new { @class = "left-panel-input", @readonly = "readonly" })
                 </div>
@@ -137,9 +143,6 @@
                 </div>
             </div>
         }
-        <div class="form-group">
-            @Html.EditorFor(d => d.CrucialWorker, new { EmployeeDisplayName = @Model.GetDisplayName(m => m.CrucialWorker) })
-        </div>
 
     </div>
 

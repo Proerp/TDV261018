@@ -27,6 +27,7 @@ namespace TotalDTO.Productions
         public int MaterialIssueID { get; set; }
         public int MaterialIssueDetailID { get; set; }
 
+        public int PlannedOrderID { get; set; }
         public int FirmOrderID { get; set; }
         [Display(Name = "Số KHSX")]
         public string FirmOrderReference { get; set; }

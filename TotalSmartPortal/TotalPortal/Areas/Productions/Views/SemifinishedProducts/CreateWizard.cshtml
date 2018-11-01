@@ -20,6 +20,7 @@
     @Html.HiddenFor(model => model.GoodsReceiptReference)
     @Html.HiddenFor(model => model.GoodsReceiptEntryDate)
     
+    @Html.HiddenFor(model => model.PlannedOrderID)
     @Html.HiddenFor(model => model.FirmOrderID)
     @Html.HiddenFor(model => model.FirmOrderCode)
     @Html.HiddenFor(model => model.FirmOrderReference)
@@ -67,8 +68,8 @@
             columns.Bound(c => c.FirmOrderReference).Title("KHSX").Width(28);
             columns.Bound(c => c.FirmOrderCode).Title("Mã CT").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(25);
             columns.Bound(c => c.FirmOrderEntryDate).Title("Ngày KHSX").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(38);
-            columns.Bound(c => c.MaterialIssueDetailWorkshiftEntryDate).Title("Ngày phát NVL").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(38);
-            columns.Bound(c => c.MaterialIssueDetailWorkshiftCode).Title("Ca phát NVL").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(30);
+            columns.Bound(c => c.MaterialIssueDetailWorkshiftEntryDate).Title("Cấp NVL").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(38);
+            columns.Bound(c => c.MaterialIssueDetailWorkshiftCode).Title("Cấp NVL").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(30);
             columns.Bound(c => c.ProductionLineCode).Title("MS máy").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(27);
             columns.Bound(c => c.CustomerName).Title("Khách hàng").Width(60);
             columns.Bound(c => c.FirmOrderSpecification).Title("Mã thành phẩm").Width(80);
@@ -140,6 +141,7 @@
             $("#MaterialIssueDetailID").val(selectedDataItem === undefined || selectedDataItem.MaterialIssueDetailID === undefined ? null : selectedDataItem.MaterialIssueDetailID);
             $("#MaterialIssueID").val(selectedDataItem === undefined || selectedDataItem.MaterialIssueID === undefined ? null : selectedDataItem.MaterialIssueID);
             
+            $("#PlannedOrderID").val(selectedDataItem === undefined || selectedDataItem.PlannedOrderID === undefined ? null : selectedDataItem.PlannedOrderID);
             $("#FirmOrderID").val(selectedDataItem === undefined || selectedDataItem.FirmOrderID === undefined ? null : selectedDataItem.FirmOrderID);
             $("#FirmOrderCode").val(selectedDataItem === undefined || selectedDataItem.FirmOrderCode === undefined ? null : selectedDataItem.FirmOrderCode);
             $("#FirmOrderReference").val(selectedDataItem === undefined || selectedDataItem.FirmOrderReference === undefined ? null : selectedDataItem.FirmOrderReference);

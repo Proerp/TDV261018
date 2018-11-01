@@ -40,5 +40,6 @@ namespace TotalModel.Models
         public int MaterialIssueDetailWorkshiftID { get; set; }
         public System.DateTime MaterialIssueDetailWorkshiftEntryDate { get; set; }
         public string MaterialIssueDetailWorkshiftCode { get; set; }
+        public int PlannedOrderID { get; set; }
     }
 }

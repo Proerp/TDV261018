@@ -69,7 +69,7 @@ namespace TotalDTO.Inventories
         public virtual int StorekeeperID { get; set; }
 
 
-        public bool WarehouseReceiptEnabled { get { return this.WarehouseAdjustmentTypeID == (int)GlobalEnums.WarehouseAdjustmentTypeID.OtherIssues; } }
+        public bool WarehouseReceiptEnabled { get { return this.WarehouseAdjustmentTypeID == (int)GlobalEnums.WarehouseAdjustmentTypeID.BothReceiptIssues; } }
         public bool HasPositiveLine { get { return this.DtoDetails().Where(w => w.Quantity > 0).Count() > 0; } }
 
 
@@ -171,8 +171,9 @@ namespace TotalDTO.Inventories
         {
             foreach (var result in base.Validate(validationContext)) { yield return result; }
 
-            if (this.PositiveOnly && this.WarehouseAdjustmentTypeID >= 50) yield return new ValidationResult("Vui lòng chọn phân loại", new[] { "WarehouseAdjustmentTypeID" });
-            if (this.NegativeOnly && this.WarehouseAdjustmentTypeID < 50) yield return new ValidationResult("Vui lòng chọn phân loại", new[] { "WarehouseAdjustmentTypeID" });
+            if (this.PositiveOnly && (this.WarehouseAdjustmentTypeID == (int)GlobalEnums.WarehouseAdjustmentTypeID.BothReceiptIssues || this.WarehouseAdjustmentTypeID >= 50)) yield return new ValidationResult("Vui lòng chọn phân loại", new[] { "WarehouseAdjustmentTypeID" });
+            if (this.NegativeOnly && (this.WarehouseAdjustmentTypeID == (int)GlobalEnums.WarehouseAdjustmentTypeID.BothReceiptIssues || this.WarehouseAdjustmentTypeID < 50)) yield return new ValidationResult("Vui lòng chọn phân loại", new[] { "WarehouseAdjustmentTypeID" });
+            if (this.BothAdjustment && this.WarehouseAdjustmentTypeID != (int)GlobalEnums.WarehouseAdjustmentTypeID.BothReceiptIssues) yield return new ValidationResult("Vui lòng chọn phân loại", new[] { "WarehouseAdjustmentTypeID" });
         }
     }
 

@@ -28,5 +28,7 @@ namespace TotalModel.Models
         public decimal TotalQuantity { get; set; }
         public string FirmOrdersReference { get; set; }
         public string FirmOrdersCode { get; set; }
+        public decimal StartSequenceNo { get; set; }
+        public decimal StopSequenceNo { get; set; }
     }
 }
