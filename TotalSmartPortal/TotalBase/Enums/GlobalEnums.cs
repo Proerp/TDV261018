@@ -194,7 +194,10 @@ namespace TotalBase.Enums
             IssueOTH = 69, //Other
             IssueTXF = 75, //Transfer
 
-            BothReceiptIssues = 90
+            BothReceiptIssues = 90,
+
+            ReceiptPENDING = 110, //Production
+            IssuePENDING = 160 //Production
         };
 
         public enum SalesInvoiceTypeID
