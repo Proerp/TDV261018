@@ -29,7 +29,7 @@ namespace TotalModel.Models
         public string Reference { get; set; }
         public string Code { get; set; }
         public Nullable<System.DateTime> VoucherDate { get; set; }
-        public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public System.DateTime DeliveryDate { get; set; }
         public string Purposes { get; set; }
         public int CustomerID { get; set; }
         public int UserID { get; set; }

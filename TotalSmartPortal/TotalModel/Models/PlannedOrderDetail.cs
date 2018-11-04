@@ -30,7 +30,7 @@ namespace TotalModel.Models
         public Nullable<int> CombineIndex { get; set; }
         public int BomID { get; set; }
         public int MoldID { get; set; }
-        public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public System.DateTime DeliveryDate { get; set; }
         public decimal Quantity { get; set; }
         public decimal QuantitySemifinished { get; set; }
         public string Description { get; set; }

@@ -35,7 +35,7 @@ namespace TotalModel.Models
         public decimal BlockQuantity { get; set; }
         public int MoldID { get; set; }
         public decimal MoldQuantity { get; set; }
-        public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public System.DateTime DeliveryDate { get; set; }
         public decimal QuantityRequested { get; set; }
         public decimal QuantityOnhand { get; set; }
         public decimal Quantity { get; set; }
