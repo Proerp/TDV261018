@@ -69,7 +69,7 @@
             columns.Bound(c => c.FirmOrderSpecification).Title("Mã thành phẩm").Width(92);
             columns.Bound(c => c.FirmOrderSpecs).Title("Tên thành phẩm").Width(92);
             columns.Bound(p => p.TotalQuantity).Title("SL ĐH").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(32);
-            columns.Bound(p => p.TotalQuantitySemifinished).Title("Đã ĐHCK").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(32);
+            columns.Bound(p => p.TotalQuantityRemains).Title("Tồn đơn").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(32);
         })
         .ToolBar(toolbar =>
         {

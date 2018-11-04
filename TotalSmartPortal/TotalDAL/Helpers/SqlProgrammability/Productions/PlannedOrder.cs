@@ -55,13 +55,13 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "                                               ItemCode nvarchar(50) NULL, ItemEntryDate datetime NULL, ItemQuantity decimal(18, 2) NULL, ItemQuantitySemifinished decimal(18, 2) NULL, ItemQuantityFailure decimal(18, 2) NULL, ItemQuantityReceipted decimal(18, 2) NULL, ItemQuantityLoss decimal(18, 2) NULL, " + "\r\n";
             queryString = queryString + "                                               QuantitySemifinished decimal(18, 2) NULL, QuantityFinished decimal(18, 2) NULL, QuantityExcess decimal(18, 2) NULL, QuantityShortage decimal(18, 2) NULL, QuantityFailure decimal(18, 2) NULL, Swarfs decimal(18, 2) NULL) " + "\r\n";
 
-            queryString = queryString + "       IF  (@LocalDateOptionID = 0) " + "\r\n";
-            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(0) + "\r\n";
+            queryString = queryString + "       IF  (@LocalDateOptionID = 10) " + "\r\n";
+            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(10) + "\r\n";
             queryString = queryString + "       ELSE " + "\r\n";
-            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(1) + "\r\n";
+            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(11) + "\r\n";
 
 
-            queryString = queryString + "       SELECT      PlannedOrderID, EntryDate, PlannedOrderEntryDate, Reference, Code, VoucherDate, DeliveryDate, CustomerCode, CustomerName, Description, " + "\r\n";
+            queryString = queryString + "       SELECT      PlannedOrderID, EntryDate, IIF(@LocalDateOptionID = 10, DeliveryDate, PlannedOrderEntryDate) AS DisplayDate, PlannedOrderEntryDate, Reference, Code, VoucherDate, DeliveryDate, CustomerCode, CustomerName, Description, " + "\r\n";
             queryString = queryString + "                   FirmOrderID, FirmOrderDetailID, SerialID, HasProductionOrders, CommodityCode, CommodityName, Approved, InActive, InActivePartial, VoidTypeName, QuantityRequested, QuantityOnhand, Quantity, IIF(QuantitySemifinished - QuantityShortage - QuantityFailure + QuantityExcess = 0, NULL, QuantitySemifinished - QuantityShortage - QuantityFailure + QuantityExcess) AS QuantityProduced, " + "\r\n";
             queryString = queryString + "                   ItemCode, ItemEntryDate, IIF(SerialID = 0, ItemQuantity, NULL) AS ItemQuantity, IIF(SerialID = 0 AND ItemQuantitySemifinished <> 0, ItemQuantitySemifinished, NULL) AS ItemQuantitySemifinished, IIF(SerialID = 0, ItemQuantityFailure, NULL) AS ItemQuantityFailure, IIF(SerialID = 0, ItemQuantityReceipted, NULL) AS ItemQuantityReceipted, IIF(SerialID = 0, ItemQuantityLoss, NULL) AS ItemQuantityLoss, IIF(SerialID = 0, ItemQuantity - ItemQuantityReceipted, NULL) AS ItemQuantityNet," + "\r\n";
             queryString = queryString + "                   QuantitySemifinished, IIF(QuantitySemifinished - QuantityFinished = 0, NULL, QuantitySemifinished - QuantityFinished) AS QuantitySemifinishedRemains, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, (QuantityFinished - QuantityShortage - QuantityFailure + QuantityExcess) AS QuantityAndExcess, Swarfs " + "\r\n";
@@ -172,12 +172,13 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             return queryString;
         }
 
+        private string SQLDateOption(int dateOptionID) { return dateOptionID == 10 ? "PlannedOrders.EntryDate" : "PlannedOrders.DeliveryDate"; }
         private string SQLPendingVsFinished(int filterOptionID)
         {
             bool pendingVsFinished = filterOptionID == 10 || filterOptionID == 11 || filterOptionID == 12;
             return filterOptionID == 0 ? "" : ("(FirmOrderDetails.InActive " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " FirmOrderDetails.InActivePartial " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " ROUND(FirmOrderDetails.Quantity - (FirmOrderDetails.QuantitySemifinished + FirmOrderDetails.QuantityExcess - FirmOrderDetails.QuantityShortage - FirmOrderDetails.QuantityFailure), " + (int)GlobalEnums.rndQuantity + ") " + (pendingVsFinished ? ">" : "<=") + " 0) AND ");
         }
-        private string SQLDateOption(int dateOptionID) { return dateOptionID == 0 ? "PlannedOrders.EntryDate" : "PlannedOrders.DeliveryDate"; }
+        
 
         #region X
 

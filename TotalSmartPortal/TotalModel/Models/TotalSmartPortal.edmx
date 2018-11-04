@@ -13858,6 +13858,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Property Type="Decimal" Name="ItemQuantityNet" Nullable="true" Precision="19" Scale="2" />
           <Property Type="Int32" Name="HasProductionOrders" Nullable="true" />
           <Property Type="DateTime" Name="ItemEntryDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DisplayDate" Nullable="true" Precision="23" />
           </ComplexType>
         <ComplexType Name="PlannedOrderViewDetail">
           <Property Type="Int32" Name="PlannedOrderDetailID" Nullable="false" />
@@ -15032,8 +15033,8 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Property Type="String" Name="WarehouseCode" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="WarehouseName" Nullable="false" MaxLength="60" />
           <Property Type="Decimal" Name="TotalQuantity" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="TotalQuantitySemifinished" Nullable="true" Precision="38" Scale="2" />
           <Property Type="String" Name="FirmOrderSpecs" Nullable="true" MaxLength="800" />
+          <Property Type="Decimal" Name="TotalQuantityRemains" Nullable="true" Precision="38" Scale="2" />
         </ComplexType>
         <ComplexType Name="SemifinishedProductPendingMaterialIssueDetail">
           <Property Type="Int32" Name="MaterialIssueDetailID" Nullable="false" />
@@ -20827,6 +20828,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="ItemQuantityNet" ColumnName="ItemQuantityNet" />
                 <ScalarProperty Name="HasProductionOrders" ColumnName="HasProductionOrders" />
                 <ScalarProperty Name="ItemEntryDate" ColumnName="ItemEntryDate" />
+                <ScalarProperty Name="DisplayDate" ColumnName="DisplayDate" />
                 </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -21507,8 +21509,8 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
                 <ScalarProperty Name="WarehouseCode" ColumnName="WarehouseCode" />
                 <ScalarProperty Name="WarehouseName" ColumnName="WarehouseName" />
                 <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
-                <ScalarProperty Name="TotalQuantitySemifinished" ColumnName="TotalQuantitySemifinished" />
                 <ScalarProperty Name="FirmOrderSpecs" ColumnName="FirmOrderSpecs" />
+                <ScalarProperty Name="TotalQuantityRemains" ColumnName="TotalQuantityRemains" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

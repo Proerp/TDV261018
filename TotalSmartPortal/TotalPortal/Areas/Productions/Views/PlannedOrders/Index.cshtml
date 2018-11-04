@@ -5,6 +5,7 @@
 <div id="popupWindow"></div>
 
 <div>
+    @Html.Hidden("LastDateOptionID", "10")
     @Html.Hidden("LastFilterOptionID", "10")
     
         @(Html.Kendo().Grid<TotalModel.Models.PlannedOrderIndex>()
@@ -16,7 +17,7 @@
 
                 columns.Bound(p => p.Reference).Title("KHSX").Width(10).ClientTemplate("<a href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Edit" }) + "/#= PlannedOrderID #'>#=Reference#</a>");
                 columns.Bound(p => p.Code).Title("Số CT").Width(10).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
-                columns.Bound(p => p.DeliveryDate).Title("GH").Format("{0:dd/MM}").Width(20).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
+                columns.Bound(p => p.DisplayDate).Title("ĐH/GH").Format("{0:dd/MM}").Width(20).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
                 columns.Bound(p => p.CustomerName).Title("Khách hàng").Width(108);
                 columns.Bound(p => p.CommodityName).Title("Mặt hàng").Width(196);
                                 
@@ -40,8 +41,8 @@
                     <button type="button" title="Cập nhật số liệu sản xuất" class="k-button" onclick="indexFilterText_KeyUp(true)"> <img src="~/Content/Images/New/Refresh-icon.png" /> </button>            
                     <button type="button" class="k-button" onclick="callPrint()"> <img src="~/Content/Images/New/Printer-green-24.png" /> In </button>
                     <div class="toolbar" style="float: right;">
-                        <label>Nhập số ĐH, tên KH hoặc thành phẩm</label>
-                        <input id="indexFilterText" class="k-textbox" style="text-align: center; " onkeyup="indexFilterText_KeyUp()" />
+                        <label>Nhập số ĐH, tên KH hoặc SP</label>
+                        <input id="indexFilterText" class="k-textbox" style="text-align: center; width: 108px; " onkeyup="indexFilterText_KeyUp()" />
 
                         <span id="filterExtended">
                             @(Html.Kendo().DropDownList()
@@ -56,6 +57,19 @@
                                             new SelectListItem { Text = "ĐH cần sản xuất [Đang SX]", Value = "12"},
                                             new SelectListItem { Text = "ĐH đã sản xuất [Từ ... Đến]", Value = "20"},
                                             new SelectListItem { Text = "Tất cả [Từ ... Đến]", Value = "0"},
+                                      })
+                                    .Events(e => e.Change("indexFilterText_KeyUp"))
+                            )
+
+                            @(Html.Kendo().DropDownList()
+                                    .Name("ShowDateOptionID")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .HtmlAttributes(new { @style = "width: 88px; text-align: center; " })
+                                    .BindTo(new List<SelectListItem>()
+                                      {
+                                            new SelectListItem { Text = "Ngày ĐH", Value = "10"},
+                                            new SelectListItem { Text = "Ngày GH", Value = "11"}
                                       })
                                     .Events(e => e.Change("indexFilterText_KeyUp"))
                             )
@@ -119,6 +133,7 @@
             withExtendedSearch: true, //indexFilterText && indexFilterText.length >= "@Settings.AutoCompleteMinLenght03" ? true : false,
             extendedFromDate: $("#GlobalFromDate").val(),
             extendedToDate: $("#GlobalToDate").val(),
+            dateOptionID: $("#ShowDateOptionID").val(),
             filterOptionID: $("#ShowFilterOptionID").val()
         };
     }
@@ -138,7 +153,7 @@
     }
 
     function callPrint() {
-        window.open('@Url.Action("Print", "PlannedOrders", new { area = "Productions" })' + "/" + $("#ShowFilterOptionID").val() + "/" + $("#ShowFilterOptionID").val())
+        window.open('@Url.Action("Print", "PlannedOrders", new { area = "Productions" })' + "/" + $("#ShowFilterOptionID").val() + "/" + $("#ShowDateOptionID").val() + $("#ShowFilterOptionID").val())
     }
 
     decoratingKindex = function (idx, elem) {
@@ -164,11 +179,9 @@
 
     function indexFilterText_KeyUp(readDataSource) {
         var indexFilterText = $("#indexFilterText").val(), gridDetails = $("#kendoGridIndex").data("kendoGrid");
-        @*alert(indexFilterText === "");
-        alert(indexFilterText.length >= "@Settings.AutoCompleteMinLenght03");
-        alert(readDataSource);
-        alert($("#LastFilterOptionID").val() != $("#ShowFilterOptionID").val());*@
-        if (readDataSource == true || (indexFilterText === "" || indexFilterText.length >= "@Settings.AutoCompleteMinLenght03") || $("#LastFilterOptionID").val() != $("#ShowFilterOptionID").val()) {
+
+        if (readDataSource == true || (indexFilterText === "" || indexFilterText.length >= "@Settings.AutoCompleteMinLenght03") || $("#LastDateOptionID").val() != $("#ShowDateOptionID").val() || $("#LastFilterOptionID").val() != $("#ShowFilterOptionID").val()) {
+            $("#LastDateOptionID").val($("#ShowDateOptionID").val());
             $("#LastFilterOptionID").val($("#ShowFilterOptionID").val());
             gridDetails.dataSource.filter({
                 logic: "or",

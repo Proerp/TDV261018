@@ -53,5 +53,6 @@ namespace TotalModel.Models
         public Nullable<decimal> ItemQuantityNet { get; set; }
         public Nullable<int> HasProductionOrders { get; set; }
         public Nullable<System.DateTime> ItemEntryDate { get; set; }
+        public Nullable<System.DateTime> DisplayDate { get; set; }
     }
 }

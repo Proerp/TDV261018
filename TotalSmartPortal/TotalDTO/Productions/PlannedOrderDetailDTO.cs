@@ -41,6 +41,9 @@ namespace TotalDTO.Productions
         [Range(1, 3000, ErrorMessage = "Vui lòng kiểm tra số cái/ kiện [P/P]")]
         public override int PiecePerPack { get; set; }
 
+        [Display(Name = "Ngày giao hàng")]
+        public Nullable<System.DateTime> DeliveryDate { get; set; }
+
         public string VoidTypeCode { get; set; }
         [Display(Name = "Lý do")]
         [UIHint("AutoCompletes/VoidTypeBase")]

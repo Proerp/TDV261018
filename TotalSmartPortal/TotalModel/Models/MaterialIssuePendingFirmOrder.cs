@@ -29,7 +29,7 @@ namespace TotalModel.Models
         public string WarehouseCode { get; set; }
         public string WarehouseName { get; set; }
         public decimal TotalQuantity { get; set; }
-        public Nullable<decimal> TotalQuantitySemifinished { get; set; }
         public string FirmOrderSpecs { get; set; }
+        public Nullable<decimal> TotalQuantityRemains { get; set; }
     }
 }
