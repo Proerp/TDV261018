@@ -42,39 +42,23 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
         {
             string queryString;
 
-            queryString = " @AspUserID nvarchar(128), @FromDate DateTime, @ToDate DateTime, @FilterOptionID int " + "\r\n";
+            queryString = " @AspUserID nvarchar(128), @FromDate DateTime, @ToDate DateTime, @DateOptionID int, @FilterOptionID int " + "\r\n";
             queryString = queryString + " WITH ENCRYPTION " + "\r\n";
             queryString = queryString + " AS " + "\r\n";
             queryString = queryString + "    BEGIN " + "\r\n";
 
-            queryString = queryString + "       DECLARE     @LocalAspUserID nvarchar(128), @LocalFromDate DateTime, @LocalToDate DateTime, @LocalFilterOptionID int " + "\r\n";
-            queryString = queryString + "       SET         @LocalAspUserID = @AspUserID       SET @LocalFromDate = @FromDate      SET @LocalToDate = @ToDate          SET @LocalFilterOptionID = @FilterOptionID    " + "\r\n";
+            queryString = queryString + "       DECLARE     @LocalAspUserID nvarchar(128), @LocalFromDate DateTime, @LocalToDate DateTime, @LocalDateOptionID int, @LocalFilterOptionID int " + "\r\n";
+            queryString = queryString + "       SET         @LocalAspUserID = @AspUserID       SET @LocalFromDate = @FromDate      SET @LocalToDate = @ToDate           SET @LocalDateOptionID = @DateOptionID         SET @LocalFilterOptionID = @FilterOptionID    " + "\r\n";
 
             queryString = queryString + "       DECLARE     @PlannedOrderIndexes TABLE (PlannedOrderID int NOT NULL, EntryDate datetime NOT NULL, PlannedOrderEntryDate datetime NOT NULL, Reference nvarchar(10) NOT NULL, Code nvarchar(50) NULL, VoucherDate datetime NULL, DeliveryDate datetime NULL, CustomerCode nvarchar(50) NOT NULL, CustomerName nvarchar(100) NOT NULL, Description nvarchar(100) NULL, " + "\r\n";
             queryString = queryString + "                                               FirmOrderID int NULL, FirmOrderDetailID int NULL, SerialID int NULL, HasProductionOrders int NULL, CommodityCode nvarchar(50) NULL, CommodityName nvarchar(200) NULL, Approved bit NOT NULL, InActive bit NOT NULL, InActivePartial bit NOT NULL, VoidTypeName nvarchar(50) NULL, QuantityRequested decimal(18, 2) NULL, QuantityOnhand decimal(18, 2) NULL, Quantity decimal(18, 2) NULL, " + "\r\n";
             queryString = queryString + "                                               ItemCode nvarchar(50) NULL, ItemEntryDate datetime NULL, ItemQuantity decimal(18, 2) NULL, ItemQuantitySemifinished decimal(18, 2) NULL, ItemQuantityFailure decimal(18, 2) NULL, ItemQuantityReceipted decimal(18, 2) NULL, ItemQuantityLoss decimal(18, 2) NULL, " + "\r\n";
             queryString = queryString + "                                               QuantitySemifinished decimal(18, 2) NULL, QuantityFinished decimal(18, 2) NULL, QuantityExcess decimal(18, 2) NULL, QuantityShortage decimal(18, 2) NULL, QuantityFailure decimal(18, 2) NULL, Swarfs decimal(18, 2) NULL) " + "\r\n";
 
-            queryString = queryString + "       IF  (@LocalFilterOptionID = 0) " + "\r\n";
+            queryString = queryString + "       IF  (@LocalDateOptionID = 0) " + "\r\n";
             queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(0) + "\r\n";
             queryString = queryString + "       ELSE " + "\r\n";
-            queryString = queryString + "           BEGIN " + "\r\n";
-            queryString = queryString + "               IF  (@LocalFilterOptionID = 10) " + "\r\n";
-            queryString = queryString + "                   " + this.GetPlannedOrderIndexSQL(10) + "\r\n";
-            queryString = queryString + "               ELSE " + "\r\n";
-            queryString = queryString + "                   BEGIN " + "\r\n";
-            queryString = queryString + "                       IF  (@LocalFilterOptionID = 11) " + "\r\n";
-            queryString = queryString + "                           " + this.GetPlannedOrderIndexSQL(11) + "\r\n";
-            queryString = queryString + "                       ELSE " + "\r\n";
-            queryString = queryString + "                           BEGIN " + "\r\n";
-            queryString = queryString + "                               IF  (@LocalFilterOptionID = 12) " + "\r\n";
-            queryString = queryString + "                                   " + this.GetPlannedOrderIndexSQL(12) + "\r\n";
-            queryString = queryString + "                               ELSE " + "\r\n";
-            queryString = queryString + "                                   " + this.GetPlannedOrderIndexSQL(20) + "\r\n";
-            queryString = queryString + "                           END " + "\r\n";
-            queryString = queryString + "                   END " + "\r\n";
-            queryString = queryString + "           END " + "\r\n";
-
+            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(1) + "\r\n";
 
 
             queryString = queryString + "       SELECT      PlannedOrderID, EntryDate, PlannedOrderEntryDate, Reference, Code, VoucherDate, DeliveryDate, CustomerCode, CustomerName, Description, " + "\r\n";
@@ -83,14 +67,42 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "                   QuantitySemifinished, IIF(QuantitySemifinished - QuantityFinished = 0, NULL, QuantitySemifinished - QuantityFinished) AS QuantitySemifinishedRemains, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, (QuantityFinished - QuantityShortage - QuantityFailure + QuantityExcess) AS QuantityAndExcess, Swarfs " + "\r\n";
 
             queryString = queryString + "       FROM        @PlannedOrderIndexes " + "\r\n"; //NOTE: QuantityProduced: QuantitySemifinishedRemains + QuantityAndExcess
-            queryString = queryString + "       ORDER BY    PlannedOrderEntryDate DESC, CommodityCode " + "\r\n"; 
+            queryString = queryString + "       ORDER BY    PlannedOrderEntryDate DESC, CommodityCode " + "\r\n";
 
             queryString = queryString + "    END " + "\r\n";
 
             this.totalSmartPortalEntities.CreateStoredProcedure("GetPlannedOrderIndexes", queryString);
         }
 
-        private string GetPlannedOrderIndexSQL(int filterOptionID)
+        private string GetPlannedOrderIndexSQL(int dateOptionID)
+        {
+            string queryString = "";
+            
+            queryString = queryString + "   BEGIN " + "\r\n";
+            queryString = queryString + "       IF  (@LocalFilterOptionID = 0) " + "\r\n";
+            queryString = queryString + "           " + this.GetPlannedOrderIndexSQL(dateOptionID, 0) + "\r\n";
+            queryString = queryString + "       ELSE " + "\r\n";
+            queryString = queryString + "           BEGIN " + "\r\n";
+            queryString = queryString + "               IF  (@LocalFilterOptionID = 10) " + "\r\n";
+            queryString = queryString + "                   " + this.GetPlannedOrderIndexSQL(dateOptionID, 10) + "\r\n";
+            queryString = queryString + "               ELSE " + "\r\n";
+            queryString = queryString + "                   BEGIN " + "\r\n";
+            queryString = queryString + "                       IF  (@LocalFilterOptionID = 11) " + "\r\n";
+            queryString = queryString + "                           " + this.GetPlannedOrderIndexSQL(dateOptionID, 11) + "\r\n";
+            queryString = queryString + "                       ELSE " + "\r\n";
+            queryString = queryString + "                           BEGIN " + "\r\n";
+            queryString = queryString + "                               IF  (@LocalFilterOptionID = 12) " + "\r\n";
+            queryString = queryString + "                                   " + this.GetPlannedOrderIndexSQL(dateOptionID, 12) + "\r\n";
+            queryString = queryString + "                               ELSE " + "\r\n";
+            queryString = queryString + "                                   " + this.GetPlannedOrderIndexSQL(dateOptionID, 20) + "\r\n";
+            queryString = queryString + "                           END " + "\r\n";
+            queryString = queryString + "                   END " + "\r\n";
+            queryString = queryString + "           END " + "\r\n";
+            queryString = queryString + "   END " + "\r\n";
+
+            return queryString;
+        }
+        private string GetPlannedOrderIndexSQL(int dateOptionID, int filterOptionID)
         {
 
             //filterOptionID: 0: NORMAL  PlannedOrderDetails LEFT JOIN FirmOrderDetails: FROM TO
@@ -100,7 +112,7 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             //filterOptionID: 20: FINISH  PlannedOrderDetails INNER JOIN FirmOrderDetails: FROM TO
 
             string queryString = "";
-            
+
             queryString = queryString + "    BEGIN " + "\r\n";
 
             //THE SAME INSERT QUERY
@@ -109,13 +121,13 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
             queryString = queryString + "                                         ItemCode, ItemEntryDate, ItemQuantity, ItemQuantitySemifinished, ItemQuantityFailure, ItemQuantityReceipted, ItemQuantityLoss, " + "\r\n";
             queryString = queryString + "                                         QuantitySemifinished, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, Swarfs) " + "\r\n";
 
-            queryString = queryString + "       SELECT      PlannedOrders.PlannedOrderID, CAST(PlannedOrders.EntryDate AS DATE) AS EntryDate, PlannedOrders.EntryDate AS PlannedOrderEntryDate, PlannedOrders.Reference, PlannedOrders.Code, PlannedOrders.VoucherDate, PlannedOrders.DeliveryDate, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, PlannedOrders.Description, " + "\r\n";
+            queryString = queryString + "       SELECT      PlannedOrders.PlannedOrderID, CAST(" + this.SQLDateOption(dateOptionID) + " AS DATE) AS EntryDate, PlannedOrders.EntryDate AS PlannedOrderEntryDate, PlannedOrders.Reference, PlannedOrders.Code, PlannedOrders.VoucherDate, PlannedOrders.DeliveryDate, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, PlannedOrders.Description, " + "\r\n";
             queryString = queryString + "                   FirmOrderDetails.FirmOrderID, FirmOrderDetails.FirmOrderDetailID, 0 AS SerialID, FirmOrderDetails.HasProductionOrders, Commodities.Code AS CommodityCode, Commodities.Name AS CommodityName, PlannedOrders.Approved, PlannedOrders.InActive, PlannedOrderDetails.InActivePartial, ISNULL(VoidTypes.Name, VoidTypeDetails.Name) AS VoidTypeName, PlannedOrderDetails.QuantityRequested, PlannedOrderDetails.QuantityOnhand, PlannedOrderDetails.Quantity, " + "\r\n";
             queryString = queryString + "                   Items.Code AS ItemCode, MaterialIssueSummaries.ItemEntryDate, MaterialIssueSummaries.ItemQuantity, MaterialIssueSummaries.ItemQuantitySemifinished, MaterialIssueSummaries.ItemQuantityFailure, MaterialIssueSummaries.ItemQuantityReceipted, MaterialIssueSummaries.ItemQuantityLoss, " + "\r\n";
             queryString = queryString + "                   FirmOrderDetails.QuantitySemifinished, FirmOrderDetails.QuantityFinished, FirmOrderDetails.QuantityExcess, FirmOrderDetails.QuantityShortage, FirmOrderDetails.QuantityFailure, FirmOrderDetails.Swarfs " + "\r\n";
 
             queryString = queryString + "       FROM        PlannedOrders " + "\r\n";
-            queryString = queryString + "                   INNER JOIN  Customers ON " + (filterOptionID == 0 || filterOptionID == 20 ? "PlannedOrders.EntryDate >= @LocalFromDate AND PlannedOrders.EntryDate <= @LocalToDate AND" : "") + " PlannedOrders.OrganizationalUnitID IN (SELECT DISTINCT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @LocalAspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
+            queryString = queryString + "                   INNER JOIN  Customers ON " + (filterOptionID == 0 || filterOptionID == 20 ? this.SQLDateOption(dateOptionID) + " >= @LocalFromDate AND " + this.SQLDateOption(dateOptionID) + " <= @LocalToDate AND" : "") + " PlannedOrders.OrganizationalUnitID IN (SELECT DISTINCT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @LocalAspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
             queryString = queryString + "                   INNER JOIN  PlannedOrderDetails ON PlannedOrders.PlannedOrderID = PlannedOrderDetails.PlannedOrderID " + "\r\n";
             queryString = queryString + "                   INNER JOIN  Commodities ON PlannedOrderDetails.CommodityID = Commodities.CommodityID " + "\r\n";
             queryString = queryString + "                   INNER JOIN  FirmOrderDetails ON " + this.SQLPendingVsFinished(filterOptionID) + " PlannedOrderDetails.PlannedOrderDetailID = FirmOrderDetails.PlannedOrderDetailID " + "\r\n";
@@ -143,13 +155,13 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
                 queryString = queryString + "                                     ItemCode, ItemEntryDate, ItemQuantity, ItemQuantitySemifinished, ItemQuantityFailure, ItemQuantityReceipted, ItemQuantityLoss, " + "\r\n";
                 queryString = queryString + "                                     QuantitySemifinished, QuantityFinished, QuantityExcess, QuantityShortage, QuantityFailure, Swarfs) " + "\r\n";
 
-                queryString = queryString + "   SELECT      PlannedOrders.PlannedOrderID, CAST(PlannedOrders.EntryDate AS DATE) AS EntryDate, PlannedOrders.EntryDate AS PlannedOrderEntryDate, PlannedOrders.Reference, PlannedOrders.Code, PlannedOrders.VoucherDate, PlannedOrders.DeliveryDate, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, PlannedOrders.Description, " + "\r\n";
+                queryString = queryString + "   SELECT      PlannedOrders.PlannedOrderID, CAST(" + this.SQLDateOption(dateOptionID) + " AS DATE) AS EntryDate, PlannedOrders.EntryDate AS PlannedOrderEntryDate, PlannedOrders.Reference, PlannedOrders.Code, PlannedOrders.VoucherDate, PlannedOrders.DeliveryDate, Customers.Code AS CustomerCode, Customers.Name AS CustomerName, PlannedOrders.Description, " + "\r\n";
                 queryString = queryString + "               NULL AS FirmOrderID, NULL AS FirmOrderDetailID, NULL AS SerialID, NULL AS HasProductionOrders, Commodities.Code AS CommodityCode, Commodities.Name AS CommodityName, PlannedOrders.Approved, PlannedOrders.InActive, 0 AS InActivePartial, VoidTypes.Name AS VoidTypeName, PlannedOrderDetails.QuantityRequested, PlannedOrderDetails.QuantityOnhand, PlannedOrderDetails.Quantity, " + "\r\n";
                 queryString = queryString + "               NULL AS ItemCode, NULL AS ItemEntryDate, NULL AS ItemQuantity, NULL AS ItemQuantitySemifinished, NULL AS ItemQuantityFailure, NULL AS ItemQuantityReceipted, NULL AS ItemQuantityLoss, " + "\r\n";
                 queryString = queryString + "               NULL AS QuantitySemifinished, NULL AS QuantityFinished, NULL AS QuantityExcess, NULL AS QuantityShortage, NULL AS QuantityFailure, NULL AS Swarfs " + "\r\n";
 
                 queryString = queryString + "   FROM        PlannedOrders " + "\r\n"; //(PlannedOrders.Approved = 0 OR Caption IS NULL): (NOT APPROVED || NO DETAIL ROWS)
-                queryString = queryString + "               INNER JOIN  Customers ON " + (filterOptionID == 0 || filterOptionID == 20 ? "PlannedOrders.EntryDate >= @LocalFromDate AND PlannedOrders.EntryDate <= @LocalToDate AND" : "") + " (PlannedOrders.Approved = 0 OR Caption IS NULL) AND PlannedOrders.OrganizationalUnitID IN (SELECT DISTINCT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @LocalAspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
+                queryString = queryString + "               INNER JOIN  Customers ON " + (filterOptionID == 0 || filterOptionID == 20 ? this.SQLDateOption(dateOptionID) + " >= @LocalFromDate AND " + this.SQLDateOption(dateOptionID) + " <= @LocalToDate AND" : "") + " (PlannedOrders.Approved = 0 OR Caption IS NULL) AND PlannedOrders.OrganizationalUnitID IN (SELECT DISTINCT AccessControls.OrganizationalUnitID FROM AccessControls INNER JOIN AspNetUsers ON AccessControls.UserID = AspNetUsers.UserID WHERE AspNetUsers.Id = @LocalAspUserID AND AccessControls.NMVNTaskID = " + (int)TotalBase.Enums.GlobalEnums.NmvnTaskID.PlannedOrder + " AND AccessControls.AccessLevel > 0) AND PlannedOrders.CustomerID = Customers.CustomerID " + "\r\n";
                 queryString = queryString + "               LEFT JOIN   PlannedOrderDetails ON PlannedOrders.PlannedOrderID = PlannedOrderDetails.PlannedOrderID " + "\r\n";
                 queryString = queryString + "               LEFT JOIN   Commodities ON PlannedOrderDetails.CommodityID = Commodities.CommodityID " + "\r\n";
                 queryString = queryString + "               LEFT JOIN   VoidTypes ON PlannedOrders.VoidTypeID = VoidTypes.VoidTypeID " + "\r\n";
@@ -163,8 +175,9 @@ namespace TotalDAL.Helpers.SqlProgrammability.Productions
         private string SQLPendingVsFinished(int filterOptionID)
         {
             bool pendingVsFinished = filterOptionID == 10 || filterOptionID == 11 || filterOptionID == 12;
-            return filterOptionID == 0 ? "" : ("(FirmOrderDetails.InActive " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " FirmOrderDetails.InActivePartial " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " ROUND(FirmOrderDetails.Quantity - (FirmOrderDetails.QuantitySemifinished + FirmOrderDetails.QuantityExcess - FirmOrderDetails.QuantityShortage - FirmOrderDetails.QuantityFailure), " + (int)GlobalEnums.rndQuantity + ") " + (pendingVsFinished ? ">" : "<=") + " 0) AND " + (pendingVsFinished ? "" : "FirmOrderDetails.EntryDate >= @FromDate AND FirmOrderDetails.EntryDate <= @ToDate AND "));
+            return filterOptionID == 0 ? "" : ("(FirmOrderDetails.InActive " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " FirmOrderDetails.InActivePartial " + (pendingVsFinished ? "=" : "<>") + " 0 " + (pendingVsFinished ? "AND" : "OR") + " ROUND(FirmOrderDetails.Quantity - (FirmOrderDetails.QuantitySemifinished + FirmOrderDetails.QuantityExcess - FirmOrderDetails.QuantityShortage - FirmOrderDetails.QuantityFailure), " + (int)GlobalEnums.rndQuantity + ") " + (pendingVsFinished ? ">" : "<=") + " 0) AND ");
         }
+        private string SQLDateOption(int dateOptionID) { return dateOptionID == 0 ? "PlannedOrders.EntryDate" : "PlannedOrders.DeliveryDate"; }
 
         #region X
 

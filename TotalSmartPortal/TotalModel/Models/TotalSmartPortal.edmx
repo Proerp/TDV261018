@@ -5956,6 +5956,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
           <Parameter Name="AspUserID" Type="nvarchar" Mode="In" />
           <Parameter Name="FromDate" Type="datetime" Mode="In" />
           <Parameter Name="ToDate" Type="datetime" Mode="In" />
+          <Parameter Name="DateOptionID" Type="int" Mode="In" />
           <Parameter Name="FilterOptionID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetPlannedOrderLogs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -11319,6 +11320,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
             <Parameter Name="AspUserID" Mode="In" Type="String" />
             <Parameter Name="FromDate" Mode="In" Type="DateTime" />
             <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DateOptionID" Mode="In" Type="Int32" />
             <Parameter Name="FilterOptionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetPlannedOrderViewDetails" ReturnType="Collection(TotalSmartPortalModel.PlannedOrderViewDetail)">
