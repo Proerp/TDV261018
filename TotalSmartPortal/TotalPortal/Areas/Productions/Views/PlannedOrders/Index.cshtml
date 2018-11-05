@@ -7,7 +7,8 @@
 <div>
     @Html.Hidden("LastDateOptionID", "10")
     @Html.Hidden("LastFilterOptionID", "10")
-    
+    @Html.Hidden("SelectedFirmOrderID", "0")
+
         @(Html.Kendo().Grid<TotalModel.Models.PlannedOrderIndex>()
             .Name("kendoGridIndex")
             .Columns(columns =>
@@ -19,7 +20,7 @@
                 columns.Bound(p => p.Code).Title("Số CT").Width(10).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
                 columns.Bound(p => p.DisplayDate).Title("ĐH/GH").Format("{0:dd/MM}").Width(20).HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" });
                 columns.Bound(p => p.CustomerName).Title("Khách hàng").Width(108);
-                columns.Bound(p => p.CommodityName).Title("Mặt hàng").Width(196);
+                columns.Bound(p => p.CommodityName).Title("Mặt hàng").Width(193);
                                 
                 columns.Bound(p => p.QuantityRequested).Title("SL Y/C").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmN0 + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
                 columns.Bound(p => p.Quantity).Title("Phải SX").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmN0 + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
@@ -31,8 +32,8 @@
                 columns.Bound(p => p.ItemQuantityNet).Title("Màng Kg").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
                 columns.Bound(p => p.ItemQuantitySemifinished).Title("Phôi Kg").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(30).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
 
-                columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(92)
-                    .ClientTemplate("<a class='k-button' title='Hủy' style='padding-left:5px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Void" }) + "/#= PlannedOrderID #'><span class='k-icon k-edit'></span></a> <a class='k-button' title='Xóa' style='padding-left:0px; padding-right:0px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Delete" }) + "/#= PlannedOrderID #'><span class='k-icon k-delete'></span></a>");
+                columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(101)
+                    .ClientTemplate("<a class='k-button' title='Cấp màng cho đơn hàng này' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px;' onclick='createMaterialIssue(#= FirmOrderID #)'><span class='k-icon k-i-calendar'></span></a><a class='k-button' title='Hủy' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Void" }) + "/#= PlannedOrderID #'><span class='k-icon k-i-columns'></span></a><a class='k-button' title='Xóa' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px' href='" + Url.RouteUrl("Default", new { controller = "Productions/PlannedOrders", action = "Delete" }) + "/#= PlannedOrderID #'><span class='k-icon k-delete'></span></a>");
             })
             .ToolBar(toolbar =>
             {
@@ -152,8 +153,16 @@
         });
     }
 
+    function createMaterialIssue(firmOrderID) {        
+        $("#SelectedFirmOrderID").val(firmOrderID);
+        require(["kpopupWindow"], function (kpopupWindow) {
+            var createWizardWindow = new kpopupWindow();
+            createWizardWindow.openWindow($("#popupWindow"), "@Url.Action("CreateWizard", "MaterialIssues", new { area = "Inventories" })", "Chọn lệnh sản xuất", "@Settings.PopupWidth", "@Settings.PopupHeight");
+        });
+    }
+
     function callPrint() {
-        window.open('@Url.Action("Print", "PlannedOrders", new { area = "Productions" })' + "/" + $("#ShowFilterOptionID").val() + "/" + $("#ShowDateOptionID").val() + $("#ShowFilterOptionID").val())
+        window.open('@Url.Action("Print", "PlannedOrders", new { area = "Productions" })' + "/" + $("#ShowDateOptionID").val() + "/" + $("#ShowFilterOptionID").val())
     }
 
     decoratingKindex = function (idx, elem) {

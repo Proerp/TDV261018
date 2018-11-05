@@ -63,13 +63,13 @@
         .Columns(columns =>
         {
             columns.Bound(c => c.FirmOrderReference).Title("KHSX").Width(28);
-            columns.Bound(c => c.FirmOrderCode).Title("Mã CT").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(25);
+            columns.Bound(c => c.FirmOrderCode).Title("Mã CT").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(28);
             columns.Bound(c => c.FirmOrderEntryDate).Title("Ngày KHSX").Format("{0:dd/MM/yyyy}").HtmlAttributes(new { @class = "grid-column-center" }).HeaderHtmlAttributes(new { @style = "text-align: center" }).Width(38);
             columns.Bound(c => c.CustomerName).Title("Khách hàng").Width(50);
             columns.Bound(c => c.FirmOrderSpecification).Title("Mã thành phẩm").Width(92);
             columns.Bound(c => c.FirmOrderSpecs).Title("Tên thành phẩm").Width(92);
-            columns.Bound(p => p.TotalQuantity).Title("SL ĐH").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(32);
-            columns.Bound(p => p.TotalQuantityRemains).Title("Tồn đơn").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(32);
+            columns.Bound(p => p.TotalQuantity).Title("SL ĐH").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(31);
+            columns.Bound(p => p.TotalQuantityRemains).Title("Tồn đơn").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(31);
         })
         .ToolBar(toolbar =>
         {
@@ -86,7 +86,7 @@
                 function (e) {
                     return {
                         locationID: window.parent.requireConfig.pageOptions.LocationID,
-                        firmOrderID: $("#SelectedFirmOrderID") != undefined && $("#SelectedFirmOrderID").val() != 0? $("#SelectedFirmOrderID").val(): null
+                        firmOrderID: window.parent.$("#SelectedFirmOrderID") != undefined && window.parent.$("#SelectedFirmOrderID").val() != 0? window.parent.$("#SelectedFirmOrderID").val(): null
                     };
                 }
                 </text>))

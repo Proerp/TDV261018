@@ -14,13 +14,13 @@
 
             columns.Bound(p => p.Reference).Title("PNK").Width(10).ClientTemplate("<a href='" + Url.RouteUrl("Default", new { controller = "Inventories/" + Model.ControllerName, action = "Edit" }) + "/#= GoodsReceiptID #'>#=Reference#</a>");
             columns.Bound(p => p.CustomerName).Title("K/H").Width(108);
-            columns.Bound(p => p.GoodsReceiptTypeCaption).Title("Nguồn hàng").Width(207);
-            columns.Bound(p => p.Caption).Title("Mặt hàng").Width(227);
-            columns.Bound(p => p.Description).Title("Diễn giải").Width(96);
+            columns.Bound(p => p.GoodsReceiptTypeCaption).Title("Nguồn hàng").Width(168);
+            columns.Bound(p => p.Caption).Title("Mặt hàng").Width(196);
+            columns.Bound(p => p.Description).Title("Diễn giải").Width(207);
             columns.Bound(p => p.TotalQuantity).Title("SL").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10).ClientFooterTemplate("#= kendo.format('" + Settings.kfmQuantity + "', sum) #").FooterHtmlAttributes(new { @class = "grid-number-column" });
 
-            columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(68)
-                .ClientTemplate("<a class='k-button' title='In' style='padding-left:0px; padding-right:0px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Inventories/" + Model.ControllerName, action = "Print" }) + "/#= GoodsReceiptID #'><span class='k-icon k-i-folder-add'></span></a></a> <a class='k-button' title='Xóa chứng từ' style='padding-left:0px; padding-right:0px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Inventories/" + Model.ControllerName, action = "Delete" }) + "/#= GoodsReceiptID #'><span class='k-icon k-delete'></span></a>");
+            columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(60)
+                .ClientTemplate("<a class='k-button' title='In' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px' href='" + Url.RouteUrl("Default", new { controller = "Inventories/" + Model.ControllerName, action = "Print" }) + "/#= GoodsReceiptID #'><span class='k-icon k-i-folder-add'></span></a></a> <a class='k-button' title='Xóa chứng từ' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px' href='" + Url.RouteUrl("Default", new { controller = "Inventories/" + Model.ControllerName, action = "Delete" }) + "/#= GoodsReceiptID #'><span class='k-icon k-delete'></span></a>");
         })
         .ToolBar(toolbar =>
         {

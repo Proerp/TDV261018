@@ -17,15 +17,15 @@
             columns.Bound(p => p.WorkshiftEntryDate).Title("Ngày SX").Format("{0:dd/MM/yyyy}").Width(10);
             columns.Bound(p => p.WorkshiftCode).Title("Ca SX").Width(60);
             columns.Bound(p => p.ProductionLineCode).Title("Máy").Width(10);
-            columns.Bound(p => p.Specification).Title("Thành phẩm").Width(168);
+            columns.Bound(p => p.Specification).Title("Thành phẩm").Width(228);
 
             columns.Bound(p => p.StartSequenceNo).Title("BĐ").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10);
             columns.Bound(p => p.StopSequenceNo).Title("KT").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10);
             
             columns.Bound(p => p.TotalQuantity).Title("SL").Format(Settings.kfmQuantity).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10);
 
-            columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(76)
-                .ClientTemplate("<a class='k-button' style='padding-left:5px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/SemifinishedProducts", action = "Print" }) + "/#= SemifinishedProductID #' target='_blank'><span class='k-icon k-i-folder-add'></span></a> <a class='k-button' style='padding-left:0px; padding-right:0px; min-width:28px; width:28px' href='" + Url.RouteUrl("Default", new { controller = "Productions/SemifinishedProducts", action = "Delete" }) + "/#= SemifinishedProductID #'><span class='k-icon k-delete'></span></a>");
+            columns.Template(model => null).HtmlAttributes(new { @class = "grid-column-center" }).Width(68)
+                .ClientTemplate("<a class='k-button' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px' href='" + Url.RouteUrl("Default", new { controller = "Productions/SemifinishedProducts", action = "Print" }) + "/#= SemifinishedProductID #' target='_blank'><span class='k-icon k-i-folder-add'></span></a> <a class='k-button' style='padding-left:0px; padding-right:0px; min-width:22px; width:22px' href='" + Url.RouteUrl("Default", new { controller = "Productions/SemifinishedProducts", action = "Delete" }) + "/#= SemifinishedProductID #'><span class='k-icon k-delete'></span></a>");
         })
         .ToolBar(toolbar =>
         {
