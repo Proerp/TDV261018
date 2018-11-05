@@ -284,6 +284,7 @@
     <Compile Include="Areas\Commons\Controllers\EmployeesController.cs" />
     <Compile Include="Areas\Commons\Controllers\MoldsController.cs" />
     <Compile Include="Areas\Commons\Controllers\PromotionsController.cs" />
+    <Compile Include="Areas\Commons\Controllers\Sessions\ShiftSession.cs" />
     <Compile Include="Areas\Commons\ViewModels\CommodityPriceViewModel.cs" />
     <Compile Include="Areas\Commons\ViewModels\CommodityViewModel.cs" />
     <Compile Include="Areas\Commons\ViewModels\CustomerViewModel.cs" />

@@ -15,10 +15,11 @@ using TotalCore.Repositories.Commons;
 using TotalDTO.Inventories;
 
 using TotalPortal.Controllers;
+using TotalPortal.APIs.Sessions;
 using TotalPortal.Areas.Inventories.ViewModels;
 using TotalPortal.Areas.Inventories.Builders;
 using TotalPortal.Areas.Inventories.Controllers.Sessions;
-using TotalPortal.APIs.Sessions;
+using TotalPortal.Areas.Commons.Controllers.Sessions;
 
 namespace TotalPortal.Areas.Inventories.Controllers
 {
@@ -57,6 +58,12 @@ namespace TotalPortal.Areas.Inventories.Controllers
         {
             simpleViewModel = base.InitViewModelByDefault(simpleViewModel);
 
+            if (simpleViewModel.ShiftID == 0)
+            {
+                string shiftSession = ShiftSession.GetShift(this.HttpContext);
+                if (HomeSession.TryParseID(shiftSession) > 0) simpleViewModel.ShiftID = (int)HomeSession.TryParseID(shiftSession);
+            }
+
             if (simpleViewModel.Storekeeper == null)
             {
                 string storekeeperSession = MaterialIssueSession.GetStorekeeper(this.HttpContext);
@@ -87,6 +94,7 @@ namespace TotalPortal.Areas.Inventories.Controllers
         protected override void BackupViewModelToSession(MaterialIssueViewModel simpleViewModel)
         {
             base.BackupViewModelToSession(simpleViewModel);
+            ShiftSession.SetShift(this.HttpContext, simpleViewModel.ShiftID);
             MaterialIssueSession.SetStorekeeper(this.HttpContext, simpleViewModel.Storekeeper.EmployeeID, simpleViewModel.Storekeeper.Name);
             MaterialIssueSession.SetCrucialWorker(this.HttpContext, simpleViewModel.CrucialWorker.EmployeeID, simpleViewModel.CrucialWorker.Name);
         }

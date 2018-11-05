@@ -15,9 +15,9 @@
 
             columns.Bound(p => p.CustomerName).Title("Tên KH").Width(127);
             columns.Bound(p => p.WorkshiftEntryDate).Title("Ngày SX").Format("{0:dd/MM/yyyy}").Width(10);
-            columns.Bound(p => p.WorkshiftCode).Title("Ca SX").Width(60);
+            columns.Bound(p => p.WorkshiftCode).Title("Ca SX").Hidden();
             columns.Bound(p => p.ProductionLineCode).Title("Máy").Width(10);
-            columns.Bound(p => p.Specification).Title("Thành phẩm").Width(228);
+            columns.Bound(p => p.Specification).Title("Thành phẩm").Width(238);
 
             columns.Bound(p => p.StartSequenceNo).Title("BĐ").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10);
             columns.Bound(p => p.StopSequenceNo).Title("KT").Format(Settings.kfmN0).HtmlAttributes(new { @class = "grid-number-column" }).HeaderHtmlAttributes(new { @style = "text-align: right" }).Width(10);
@@ -48,7 +48,7 @@
             })
             .DataSource(dataSource => dataSource
                 .Ajax()
-                .Group(group => group.AddDescending(p => p.EntryDate))
+                .Group(group => group.AddDescending(p => p.EntryDate)).Group(group => group.Add(p => p.WorkshiftCode))
                 .Read(read => read.Action("GetSemifinishedProductIndexes", "SemifinishedProductAPIs", new { area = "Productions" }))
                 .Sort(sort =>
                     {
