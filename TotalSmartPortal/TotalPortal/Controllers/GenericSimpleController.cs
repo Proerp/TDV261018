@@ -668,14 +668,15 @@ namespace TotalPortal.Controllers
 
 
         [OnResultExecutingFilterAttribute]
-        public ActionResult Print(int? id)
+        public ActionResult Print(int? id, int? detailID)
         {
-            return View(InitPrintViewModel(id));
+            return View(InitPrintViewModel(id, detailID));
         }
 
-        protected virtual PrintViewModel InitPrintViewModel(int? id)
+        protected virtual PrintViewModel InitPrintViewModel(int? id) { return this.InitPrintViewModel(id, null); }
+        protected virtual PrintViewModel InitPrintViewModel(int? id, int? detailID)
         {
-            PrintViewModel printViewModel = new PrintViewModel() { Id = id != null ? (int)id : 0 };
+            PrintViewModel printViewModel = new PrintViewModel() { Id = id != null ? (int)id : 0, DetailID = detailID };
             if (this.TempData["PrintOptionID"] != null)
                 printViewModel.PrintOptionID = (int)this.TempData["PrintOptionID"];
             return printViewModel;
