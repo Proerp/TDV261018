@@ -55,6 +55,20 @@ namespace TotalModel
 
         public virtual Nullable<int> VoidTypeID { get; set; }
 
+        protected virtual void ShiftSaving(int shiftID)
+        {
+            TimeSpan midnight = new TimeSpan(0, 0, 0);
+            TimeSpan sevenOclock = new TimeSpan(7, 0, 0);
+            TimeSpan atNoon = new TimeSpan(12, 0, 0);
+
+            TimeSpan entryTime = ((DateTime)this.EntryDate).TimeOfDay;
+
+            if (shiftID == 1 && entryTime >= midnight && entryTime < sevenOclock)
+                this.EntryDate = ((DateTime)this.EntryDate).AddMinutes(-1) - entryTime;
+            if (shiftID == 2 && entryTime >= midnight && entryTime < atNoon)
+                this.EntryDate = ((DateTime)this.EntryDate).AddMinutes(-1) - entryTime;
+        }
+
         #region Implementation of IValidatableObject
 
         public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
