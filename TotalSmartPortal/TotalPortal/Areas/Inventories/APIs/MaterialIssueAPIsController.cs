@@ -46,9 +46,9 @@ namespace TotalPortal.Areas.Inventories.APIs
 
 
 
-        public JsonResult GetFirmOrders([DataSourceRequest] DataSourceRequest dataSourceRequest, int? locationID)
+        public JsonResult GetFirmOrders([DataSourceRequest] DataSourceRequest dataSourceRequest, int? locationID, int? firmOrderID)
         {
-            var result = this.materialIssueAPIRepository.GetFirmOrders(locationID);
+            var result = this.materialIssueAPIRepository.GetFirmOrders(locationID, firmOrderID);
             return Json(result.ToDataSourceResult(dataSourceRequest), JsonRequestBehavior.AllowGet);
         }
 

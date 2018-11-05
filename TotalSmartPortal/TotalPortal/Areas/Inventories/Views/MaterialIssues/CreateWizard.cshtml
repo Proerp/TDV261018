@@ -85,7 +85,8 @@
             .Read(read => read.Action("GetFirmOrders", "MaterialIssueAPIs", new { area = "Inventories" }).Data(@<text>
                 function (e) {
                     return {
-                        locationID: window.parent.requireConfig.pageOptions.LocationID
+                        locationID: window.parent.requireConfig.pageOptions.LocationID,
+                        firmOrderID: $("#SelectedFirmOrderID") != undefined && $("#SelectedFirmOrderID").val() != 0? $("#SelectedFirmOrderID").val(): null
                     };
                 }
                 </text>))

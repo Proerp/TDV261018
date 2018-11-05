@@ -3062,13 +3062,17 @@ namespace TotalModel.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SemifinishedProductToggleApproved", entityIDParameter, approvedParameter);
         }
     
-        public virtual ObjectResult<MaterialIssuePendingFirmOrder> GetMaterialIssuePendingFirmOrders(Nullable<int> locationID)
+        public virtual ObjectResult<MaterialIssuePendingFirmOrder> GetMaterialIssuePendingFirmOrders(Nullable<int> locationID, Nullable<int> firmOrderID)
         {
             var locationIDParameter = locationID.HasValue ?
                 new ObjectParameter("LocationID", locationID) :
                 new ObjectParameter("LocationID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<MaterialIssuePendingFirmOrder>("GetMaterialIssuePendingFirmOrders", locationIDParameter);
+            var firmOrderIDParameter = firmOrderID.HasValue ?
+                new ObjectParameter("FirmOrderID", firmOrderID) :
+                new ObjectParameter("FirmOrderID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<MaterialIssuePendingFirmOrder>("GetMaterialIssuePendingFirmOrders", locationIDParameter, firmOrderIDParameter);
         }
     
         public virtual ObjectResult<SemifinishedProductPendingMaterialIssueDetail> GetSemifinishedProductPendingMaterialIssueDetails(Nullable<int> locationID)

@@ -32,10 +32,10 @@ namespace TotalDAL.Repositories.Inventories
         {
         }
 
-        public IEnumerable<MaterialIssuePendingFirmOrder> GetFirmOrders(int? locationID)
+        public IEnumerable<MaterialIssuePendingFirmOrder> GetFirmOrders(int? locationID, int? firmOrderID)
         {
             this.TotalSmartPortalEntities.Configuration.ProxyCreationEnabled = false;
-            IEnumerable<MaterialIssuePendingFirmOrder> pendingFirmOrders = base.TotalSmartPortalEntities.GetMaterialIssuePendingFirmOrders(locationID).ToList();
+            IEnumerable<MaterialIssuePendingFirmOrder> pendingFirmOrders = base.TotalSmartPortalEntities.GetMaterialIssuePendingFirmOrders(locationID, firmOrderID).ToList();
             this.TotalSmartPortalEntities.Configuration.ProxyCreationEnabled = true;
 
             return pendingFirmOrders;

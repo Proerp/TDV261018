@@ -5862,6 +5862,7 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
         </Function>
         <Function Name="GetMaterialIssuePendingFirmOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="LocationID" Type="int" Mode="In" />
+          <Parameter Name="FirmOrderID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetMaterialIssueViewDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MaterialIssueID" Type="int" Mode="In" />
@@ -11647,7 +11648,8 @@ warning 6035: The relationship 'FK_WarehouseTransfers_AspNetUsers2' has columns 
             <Parameter Name="Approved" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="GetMaterialIssuePendingFirmOrders" ReturnType="Collection(TotalSmartPortalModel.MaterialIssuePendingFirmOrder)">
-          <Parameter Name="LocationID" Mode="In" Type="Int32" />
+            <Parameter Name="LocationID" Mode="In" Type="Int32" />
+            <Parameter Name="FirmOrderID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetSemifinishedProductPendingMaterialIssueDetails" ReturnType="Collection(TotalSmartPortalModel.SemifinishedProductPendingMaterialIssueDetail)">
           <Parameter Name="LocationID" Mode="In" Type="Int32" />
