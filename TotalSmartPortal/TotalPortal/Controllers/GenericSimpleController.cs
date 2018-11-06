@@ -673,7 +673,7 @@ namespace TotalPortal.Controllers
             return View(InitPrintViewModel(id, detailID));
         }
 
-        protected virtual PrintViewModel InitPrintViewModel(int? id) { return this.InitPrintViewModel(id, null); }
+        //protected virtual PrintViewModel InitPrintViewModel(int? id) { return this.InitPrintViewModel(id, null); }
         protected virtual PrintViewModel InitPrintViewModel(int? id, int? detailID)
         {
             PrintViewModel printViewModel = new PrintViewModel() { Id = id != null ? (int)id : 0, DetailID = detailID };

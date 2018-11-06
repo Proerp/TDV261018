@@ -59,9 +59,9 @@ namespace TotalPortal.Areas.Inventories.Controllers
             ViewBag.WarehouseTaskIDList = warehouseTaskIDList.ToString();
         }   
 
-        protected override PrintViewModel InitPrintViewModel(int? id)
+        protected override PrintViewModel InitPrintViewModel(int? id, int? detailID)
         {
-            PrintViewModel printViewModel = base.InitPrintViewModel(id);
+            PrintViewModel printViewModel = base.InitPrintViewModel(id, detailID);
 
             TViewDetailViewModel viewDetailViewModel = this.GetViewModel(id, GlobalEnums.AccessLevel.Readable, true); if (viewDetailViewModel == null) printViewModel.Id = 0;
 

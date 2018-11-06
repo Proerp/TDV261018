@@ -54,7 +54,7 @@ namespace TotalPortal.Areas.Accounts.Controllers
 
         public ActionResult PrintDetail(int? id)
         {
-            return View(InitPrintViewModel(id));
+            return View(InitPrintViewModel(id, null));
         }
 
     }  
