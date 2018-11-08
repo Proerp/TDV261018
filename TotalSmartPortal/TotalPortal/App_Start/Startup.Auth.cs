@@ -63,8 +63,8 @@ namespace TotalPortal
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"), //HIEP---new PathString("/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14)
-                //AllowInsecureHttp = true //Don't do this in production
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
+                AllowInsecureHttp = true //Don't do this in production
             };
 
             // Enable the application to use bearer tokens to authenticate users
