@@ -73,6 +73,16 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Code)
+            <div class="div-input">
+                @Html.Kendo().MaskedTextBoxFor(model => model.Code).HtmlAttributes(new { @class = "left-panel-input" })
+            </div>
+            <div class="div-validation-message">
+                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.EditorFor(d => d.CrucialWorker, new { EmployeeDisplayName = @Model.GetDisplayName(m => m.CrucialWorker) })
         </div>
         <div class="form-group">
@@ -300,8 +310,7 @@
                 })
             )
         </div>                
-
-        @Html.Partial("~/Views/Helpers/Commons/_PlannedOrderLogs.cshtml")
+        
            
 
 
@@ -327,7 +336,8 @@
         </div>
 
         @Html.Partial("~/Views/Helpers/Bases/_BaseSubmit.cshtml")
-
+        <div style="height:68px;"></div>
+        @Html.Partial("~/Views/Helpers/Commons/_PlannedOrderLogs.cshtml")
     </div>
 }
 

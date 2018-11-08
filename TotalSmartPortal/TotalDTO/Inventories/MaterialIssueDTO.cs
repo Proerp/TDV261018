@@ -45,8 +45,8 @@ namespace TotalDTO.Inventories
         [Display(Name = "Thành phẩm")]
         public string FirmOrderSpecificationSpecs { get { return this.FirmOrderSpecs + " (" + this.FirmOrderSpecification + ")"; } }
 
-        [Display(Name = "Số chứng từ")]
-        [UIHint("Commons/SOCode")]
+        [Display(Name = "Thông số máy")]
+        [Required(ErrorMessage = "Vui lòng nhập thông số máy")]
         public string Code { get; set; }
 
         public int ShiftID { get; set; }
